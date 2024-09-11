@@ -123,13 +123,13 @@ def load_data(catalog, data_dir):
             
         genres_list=json.loads(movies["genres"])
         for genre in genres_list:
-            if genre["nombre_genero"]==0:
-                nombre_genero="Unknown"
-            elif genre["nombre_genero"]!=0:
+            if len(genre["nombre_genero"])==0:
+                nombre_genero="Sin_genero"
+            elif len(genre["nombre_genero"])!=0:
                 nombre_genero=catalog["genres"]["nombre_genero"]
-            if genre["id_genero"]==0:
-                id_genero="Unknown"
-            elif genre["id_genero"]!=0:
+            if len(genre["id_genero"])==0:
+                id_genero="Sin_genero"
+            elif len(genre["id_genero"])!=0:
                 nombre_genero=catalog["genres"]["id_genero"]    
                 
             ar.add_last(catalog["genres"]["nombre_genero"], nombre_genero)
@@ -138,13 +138,13 @@ def load_data(catalog, data_dir):
         
         production_companies_list=json.loads(movies["production_companies"])
         for production_companies in production_companies_list:
-            if production_companies["nombre_genero"]==0:
-                nombre_companias="Unknown"
-            elif production_companies["nombre_genero"]!=0:
+            if len(production_companies["nombre_compania"])==0:
+                nombre_companias="Indefinida"
+            elif len(production_companies["nombre_compania"])!=0:
                 nombre_companias=catalog["production_companies"]["nombre_compania"]
-            if production_companies["id_genero"]==0:
-                id_companias="Unknown"
-            elif production_companies["id_genero"]!=0:
+            if len(production_companies["id_compania"])==0:
+                id_companias="Indefinida"
+            elif len(production_companies["id_compania"])!=0:
                 id_companias=catalog["production_companies"]["id_compania"]    
                 
             ar.add_last(catalog["production_companies"]["nombre_genero"], nombre_companias)
