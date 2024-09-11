@@ -1,21 +1,157 @@
 import time
+import csv
+import sys
+import os
+import json
+from DataStructures.List import single_linked_list as lt
+from DataStructures.List import array_list as ar
+
+csv.field_size_limit(2147483647)
+default_limit=1000
+sys.setrecursionlimit(default_limit*10)
+
+data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
 def new_logic():
     """
     Crea el catalogo para almacenar las estructuras de datos
     """
-    #TODO: Llama a las funciónes de creación de las estructuras de datos
-    pass
+    catalog = {"id": None, # Identificador
+               "title":None,
+               "original_language": None,
+               "release_date": None, # Depende si fue lanzada o no
+               "revenue":None, # Ingresos netos de la película al momento de publicación
+               "runtime": None,
+               "status":None,
+               "vote_average":None,
+               "vote_count":None,
+               "budget":None,
+               "genres":None, #id y name
+               "production_companies":None} #id, name
+    
+    catalog['id'] = ar.new_list()
+    catalog["title"]= ar.new_list()
+    catalog['original_language']= ar.new_list()
+    catalog['release_date']=  ar.new_list()
+    catalog['revenue'] = ar.new_list()
+    catalog['runtime'] = ar.new_list()
+    catalog['status'] = ar.new_list()
+    catalog['vote_average'] = ar.new_list()
+    catalog['vote_count'] = ar.new_list()
+    catalog['budget'] = ar.new_list()
+    
+    catalog['genres'] = ar.new_list()
+    ar.add_last(catalog["genres"],{"nombre_genero":None, "id_genero":None} )
+    catalog["genres"]["nombre_genero"]=ar.new_list
+    catalog["genres"]["id_genero"]=ar.new_list
+    
+    catalog['production_companies'] = ar.new_list()
+    ar.add_last(catalog["production_companies"], {"nombre_compania":None, "id_compania":None})
+    catalog["production_companies"]["nombre_compania"]=ar.new_list
+    catalog["production_companies"]["id_compania"]=ar.new_list
+    return catalog
 
 
 # Funciones para la carga de datos
 
-def load_data(catalog, filename):
+def load_data(catalog, data_dir):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    movies=csv.DictReader(open(data_dir, encoding='utf-8'))
+    for movie in movies:
+        
+        id_list=json.load(movies["id"])
+        for id in id_list:
+            if len(id)==0:
+                id="Unknown"
+            ar.add_last(catalog["id"],id)
+            
+        title_list=json.loads(movie["title"])
+        for title in title_list:
+            if len(title)==0:
+                title="Unknown"
+            ar.add_last(catalog["title"],title)
+            
+        original_language_list=json.loads(movie["original_language"])
+        for original_language in original_language_list:
+            if len(original_language)==0:
+                original_language="Unknown"
+            ar.add_last(catalog["original_language"],original_language)
+            
+        release_date_list=json.loads(movies["release_date"])
+        for release_date in release_date_list:
+            if len(release_date)==0:
+                release_date="Unknown"
+            ar.add_last(catalog["release_date"],release_date)
+            
+        revenue_list=json.loads(movies["revenue"])
+        for revenue in revenue_list:
+            if revenue == 0:
+                revenue="Undefined"
+            ar.add_last(catalog["revenue"],revenue)
+            
+        runtime_list=json.loads(movies["runtime"])
+        for runtime in runtime_list:
+            if len(runtime)==0:
+                runtime="Unknown"
+            ar.add_last(catalog["runtime"], runtime)
+            
+        status_list=json.loads(movies["status"])
+        for status in status_list:
+            if len(status)==0:
+                status="Unknown"
+            ar.add_last(catalog["status"], status)
+            
+        vote_average_list=json.loads(movies["vote_average"])
+        for vote_average in vote_average_list:
+            if len(vote_average)==0:
+                vote_average="Unknown"
+            ar.add_last(catalog["vote_average"], vote_average)
+            
+        vote_count_list=json.loads(movies["vote_count"])
+        for vote_count in vote_count_list:
+            if len(vote_count)==0:
+                vote_count="Unknown"
+            ar.add_last(catalog["vote_count"], vote_count)
+            
+        budget_list=json.loads(movies["budget"])
+        for budget in budget_list:
+            if budget==0:
+                budget="Undefined"
+            ar.add_last(catalog["budget"], budget)
+            
+        genres_list=json.loads(movies["genres"])
+        for genre in genres_list:
+            if genre["nombre_genero"]==0:
+                nombre_genero="Unknown"
+            elif genre["nombre_genero"]!=0:
+                nombre_genero=catalog["genres"]["nombre_genero"]
+            if genre["id_genero"]==0:
+                id_genero="Unknown"
+            elif genre["id_genero"]!=0:
+                nombre_genero=catalog["genres"]["id_genero"]    
+                
+            ar.add_last(catalog["genres"]["nombre_genero"], nombre_genero)
+            ar.add_last(catalog["genres"]["id_genero"], id_genero)
+            
+        
+        production_companies_list=json.loads(movies["production_companies"])
+        for production_companies in production_companies_list:
+            if production_companies["nombre_genero"]==0:
+                nombre_companias="Unknown"
+            elif production_companies["nombre_genero"]!=0:
+                nombre_companias=catalog["production_companies"]["nombre_compania"]
+            if production_companies["id_genero"]==0:
+                id_companias="Unknown"
+            elif production_companies["id_genero"]!=0:
+                id_companias=catalog["production_companies"]["id_compania"]    
+                
+            ar.add_last(catalog["production_companies"]["nombre_genero"], nombre_companias)
+            ar.add_last(catalog["production_companies"]["id_genero"], id_companias)
+        
+    return catalog
+
 
 # Funciones de consulta sobre el catálogo
 
