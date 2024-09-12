@@ -33,8 +33,9 @@ def print_data(control, id):
     """
         Función que imprime un dato dado su ID
     """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+    id_a_buscar=input("Ingrese el id de la pelicula que desea buscar: ")
+    print(logic.get_data(control,id_a_buscar))
+    return None
 
 def print_req_1(control):
     """
