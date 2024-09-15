@@ -26,8 +26,9 @@ def new_logic():
                "vote_average":None,
                "vote_count":None,
                "budget":None,
-               "genres":None, #id y name
-               "production_companies":None} #id, name
+               "genres": {"nombre_genero": None, "id_genero": None},  # id y name
+               "production_companies": {"nombre_compania": None, "id_compania": None}  # id y name
+    }
     
     catalog['id'] = ar.new_list()
     catalog["title"]= ar.new_list()
@@ -40,15 +41,17 @@ def new_logic():
     catalog['vote_count'] = ar.new_list()
     catalog['budget'] = ar.new_list()
     
-    catalog['genres'] = ar.new_list()
-    ar.add_last(catalog["genres"],{"nombre_genero":None, "id_genero":None} )
-    catalog["genres"]["nombre_genero"]=ar.new_list
-    catalog["genres"]["id_genero"]=ar.new_list
-    
-    catalog['production_companies'] = ar.new_list()
-    ar.add_last(catalog["production_companies"], {"nombre_compania":None, "id_compania":None})
-    catalog["production_companies"]["nombre_compania"]=ar.new_list
-    catalog["production_companies"]["id_compania"]=ar.new_list
+    # Inicializar 'genres' correctamente con sublistas para 'nombre_genero' e 'id_genero'
+    catalog['genres'] = {
+        "nombre_genero": ar.new_list(),
+        "id_genero": ar.new_list()
+    }
+
+    # Inicializar 'production_companies' correctamente con sublistas para 'nombre_compania' e 'id_compania'
+    catalog['production_companies'] = {
+        "nombre_compania": ar.new_list(),
+        "id_compania": ar.new_list()
+    }
     return catalog
 
 
@@ -58,90 +61,87 @@ def load_data(catalog, data_dir):
     """
     Carga los datos del reto
     """
-    movies=csv.DictReader(open(data_dir, encoding='utf-8'))
+    movie_file = data_dir + 'movies-small.csv'
+    movies = csv.DictReader(open(movie_file, encoding='utf-8'))
+
     for movie in movies:
-        
-        id=json.load(movies["id"])
-        if len(id)==0:
-            id="Unknown"
-        ar.add_last(catalog["id"],id)
-            
-        title=json.loads(movie["title"])
-        if len(title)==0:
-            title="Unknown"
-        ar.add_last(catalog["title"],title)
-            
-        original_language=json.loads(movie["original_language"])
-        if len(original_language)==0:
-            original_language="Unknown"
-        ar.add_last(catalog["original_language"],original_language)
-            
-        release_date=json.loads(movies["release_date"])
-        if len(release_date)==0:
-            release_date="Unknown"
-        ar.add_last(catalog["release_date"],release_date)
-            
-        revenue=json.loads(movies["revenue"])
-        if revenue == 0:
-            revenue="Undefined"
-        ar.add_last(catalog["revenue"],revenue)
-            
-        runtime=json.loads(movies["runtime"])
-        if len(runtime)==0:
-            runtime="Unknown"
+        id = movie.get("id", "Unknown")
+        if len(id) == 0:
+            id = "Unknown"
+        ar.add_last(catalog["id"], id)
+
+        title = movie.get("title", "Unknown")
+        if len(title) == 0:
+            title = "Unknown"
+        ar.add_last(catalog["title"], title)
+
+        original_language = movie.get("original_language", "Unknown")
+        if len(original_language) == 0:
+            original_language = "Unknown"
+        ar.add_last(catalog["original_language"], original_language)
+
+        release_date = movie.get("release_date", "Unknown")
+        if len(release_date) == 0:
+            release_date = "Unknown"
+        ar.add_last(catalog["release_date"], release_date)
+
+        revenue = movie.get("revenue", "0")
+        if revenue == "0":
+            revenue = "Undefined"
+        ar.add_last(catalog["revenue"], revenue)
+
+        runtime = movie.get("runtime", "Unknown")
+        if len(runtime) == 0:
+            runtime = "Unknown"
         ar.add_last(catalog["runtime"], runtime)
-            
-        status=json.loads(movies["status"])
-        if len(status)==0:
-            status="Unknown"
+
+        status = movie.get("status", "Unknown")
+        if len(status) == 0:
+            status = "Unknown"
         ar.add_last(catalog["status"], status)
-            
-        vote_average=json.loads(movies["vote_average"])
-        if len(vote_average)==0:
-            vote_average="Unknown"
+
+        vote_average = movie.get("vote_average", "Unknown")
+        if len(vote_average) == 0:
+            vote_average = "Unknown"
         ar.add_last(catalog["vote_average"], vote_average)
-            
-        vote_count=json.loads(movies["vote_count"])
-        if len(vote_count)==0:
-            vote_count="Unknown"
+
+        vote_count = movie.get("vote_count", "Unknown")
+        if len(vote_count) == 0:
+            vote_count = "Unknown"
         ar.add_last(catalog["vote_count"], vote_count)
-            
-        budget=json.loads(movies["budget"])
-        if budget==0:
-            budget="Undefined"
+
+        budget = movie.get("budget", "0")
+        if budget == "0":
+            budget = "Undefined"
         ar.add_last(catalog["budget"], budget)
-            
-        genres_list=json.loads(movies["genres"])
-        for genre in genres_list:
-            if len(genre["nombre_genero"])==0:
-                nombre_genero="Sin_genero"
-            elif len(genre["nombre_genero"])!=0:
-                nombre_genero=catalog["genres"]["nombre_genero"]
-            if len(genre["id_genero"])==0:
-                id_genero="Sin_genero"
-            elif len(genre["id_genero"])!=0:
-                nombre_genero=catalog["genres"]["id_genero"]    
-                
-            ar.add_last(catalog["genres"]["nombre_genero"], nombre_genero)
-            ar.add_last(catalog["genres"]["id_genero"], id_genero)
-            
-        
-        production_companies_list=json.loads(movies["production_companies"])
-        for production_companies in production_companies_list:
-            if len(production_companies["nombre_compania"])==0:
-                nombre_companias="Indefinida"
-            elif len(production_companies["nombre_compania"])!=0:
-                nombre_companias=catalog["production_companies"]["nombre_compania"]
-            if len(production_companies["id_compania"])==0:
-                id_companias="Indefinida"
-            elif len(production_companies["id_compania"])!=0:
-                id_companias=catalog["production_companies"]["id_compania"]    
-                
-            ar.add_last(catalog["production_companies"]["nombre_genero"], nombre_companias)
-            ar.add_last(catalog["production_companies"]["id_genero"], id_companias)
-        
+
     return catalog
 
+def get_first_last_movies(catalog):
+    """Imprime las 5 primeras peliculas y las ultimas 5 peliculas cargadas
+
+    Args:
+        catalog (dict): diccionario con array list que contiene toda la informacion
+    Returns:
+        Una lista con las primeras 5 y una lista con las ultimas 5
+    """
+    first_elems= []
+    first_elems.append(ar.first_element(catalog["id"]))
+    last_elems= []
+    last_elems.append(ar.last_element(catalog["id"]))
+    tamanio= int(ar.size(catalog["id"]))
+    
+    # Primeras 5
+    for i in range(1, 6):
+        primeros_id=ar.get_element(catalog["id"], i+1)
+        first_elems.append(get_data(catalog, primeros_id))
+        
+    # Ultimas 5
+    for k in range(tamanio-5,tamanio):
+        ultimos_id=ar.get_element(catalog["id"], k+1)
+        last_elems.append(get_data(catalog, ultimos_id))
+          
+    return first_elems, last_elems
 
 # Funciones de consulta sobre el catálogo
 
@@ -149,15 +149,23 @@ def get_data(catalog, id):
     """
     Retorna un dato por su ID.
     """
-    posicion_dato= ar.is_present(catalog, id)
+    tamanio= int(ar.size(catalog["id"]))
+    posicion_dato=0
+    for i in range(tamanio):
+        if catalog["id"]["elements"][i] == id:
+            posicion_dato=i
+    
     pelicula={"publicacion":ar.get_element(catalog["release_date"], posicion_dato),
               "titulo":ar.get_element(catalog["title"], posicion_dato),
               "idioma":ar.get_element(catalog["original_language"], posicion_dato),
               "duracion":ar.get_element(catalog["runtime"], posicion_dato),
               "presupuesto":ar.get_element(catalog["budget"], posicion_dato),
-              "ingresos_netos":ar.get_element(catalog["revenue"], posicion_dato),
-              "ganancias":int(ar.get_element(catalog["revenue"])-int(ar.get_element(catalog["budget"])), posicion_dato),              
+              "ingresos_netos":ar.get_element(catalog["revenue"], posicion_dato),         
     }
+    if isinstance(pelicula.get("presupuesto"), str):
+        pelicula["ganancias"] = "Unknown"
+    else:
+        pelicula["ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato)) - float(ar.get_element(catalog["budget"], posicion_dato))
     return pelicula
 
 def req_1(catalog, min_runtime):

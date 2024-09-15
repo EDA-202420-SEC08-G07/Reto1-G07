@@ -1,5 +1,12 @@
 import sys
 import App.logic as logic
+import time
+import csv
+import sys
+import os
+import json
+from DataStructures.List import single_linked_list as lt
+from DataStructures.List import array_list as ar
 
 def new_logic():
     """
@@ -20,13 +27,31 @@ def print_menu():
     print("8- Ejecutar Requerimiento 7")
     print("9- Ejecutar Requerimiento 8 (Bono)")
     print("0- Salir")
+    
+data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
-def load_data(control):
+def load_data(control, data_dir):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    catalog=logic.load_data(control, data_dir)
+    print(print_first_and_last_movies(catalog))
+    return catalog
+
+def print_first_and_last_movies(catalog):
+    """
+    Imprime las primeras 5 peliculas y las ultimas 5 peliculas cargadas
+    """
+    first, last=logic.get_first_last_movies(catalog)
+    print("\nLas primeras peliculas de la lista son: \n")
+    for movie in first:
+        print(movie)
+    
+    print("\Las ultimas peliculas de la lista son: \n")
+    for movie in last:
+        print(movie)
+    return None
+
 
 
 def print_data(control, id):
@@ -116,7 +141,7 @@ def main():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            data = load_data(control, data_dir)
         elif int(inputs) == 2:
             print_req_1(control)
 
