@@ -5,6 +5,7 @@ import os
 import json
 from DataStructures.List import single_linked_list as lt
 from DataStructures.List import array_list as ar
+from datetime import datetime
 
 csv.field_size_limit(2147483647)
 default_limit=1000
@@ -155,17 +156,17 @@ def get_data(catalog, id):
         if catalog["id"]["elements"][i] == id:
             posicion_dato=i
     
-    pelicula={"publicacion":ar.get_element(catalog["release_date"], posicion_dato),
-              "titulo":ar.get_element(catalog["title"], posicion_dato),
-              "idioma":ar.get_element(catalog["original_language"], posicion_dato),
-              "duracion":ar.get_element(catalog["runtime"], posicion_dato),
-              "presupuesto":ar.get_element(catalog["budget"], posicion_dato),
-              "ingresos_netos":ar.get_element(catalog["revenue"], posicion_dato),         
+    pelicula={"Publicacion":ar.get_element(catalog["release_date"], posicion_dato),
+              "Titulo":ar.get_element(catalog["title"], posicion_dato),
+              "Idioma":ar.get_element(catalog["original_language"], posicion_dato),
+              "Duracion":ar.get_element(catalog["runtime"], posicion_dato),
+              "Presupuesto":ar.get_element(catalog["budget"], posicion_dato),
+              "Recaudo":ar.get_element(catalog["revenue"], posicion_dato),         
     }
-    if isinstance(pelicula.get("presupuesto"), str):
-        pelicula["ganancias"] = "Unknown"
+    if isinstance(pelicula.get("Presupuesto"), str):
+        pelicula["Ganancias"] = "Unknown"
     else:
-        pelicula["ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato)) - float(ar.get_element(catalog["budget"], posicion_dato))
+        pelicula["Ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato)) - float(ar.get_element(catalog["budget"], posicion_dato))
     return pelicula
 
 def req_1(catalog, min_runtime):
@@ -204,13 +205,68 @@ def req_3(catalog):
     pass
 
 
-def req_4(catalog):
-    """
-    Retorna el resultado del requerimiento 4
-    """
-    # TODO: Modificar el requerimiento 4
-    pass
+def req_4(catalog, fecha_inicial, fecha_final, estado):
+    """Listar  las películas  con  un  estado de  publicación entre un periodo de tiempo dado
 
+    Args:
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        fecha_inicial (str): La fecha inicial del periodo a consultar (con formato "%Y-%m-%d")
+        fecha_final (str): La fecha final del periodo a consultar (con formato "%Y-%m-%d").
+        estado (str): Estado de producción de la película (ej.: “Released”,“Rumored”,etc)
+    """
+    # Fecha formato YYYY-MM-DD
+    fecha_inicial_dt = datetime.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_final_dt = datetime.strptime(fecha_final, "%Y-%m-%d")
+
+    duracion_promedio = 0
+    peliculas = {"peli": [], "tamanio": 0}
+    tamanio = int(ar.size(catalog["id"]))
+    
+    for i in range(0, tamanio):
+        salida = catalog["release_date"]["elements"][i]
+        salida_dt = datetime.strptime(salida, "%Y-%m-%d")
+        estado_pelicula = catalog["status"]["elements"][i]
+        
+        if fecha_inicial_dt < salida_dt < fecha_final_dt and estado_pelicula.lower() == estado.lower():
+            peliculas["tamanio"]+=1
+            duracion_promedio+=float(catalog["runtime"]["elements"][i])
+            """
+            Fecha de publicación de la película
+            Título original de la película
+            Presupuesto destinado a la realización de la película
+            Dinero recaudado por la película
+            Ganancia de final de la película
+            Tiempo de duración en minutos de la película
+            Puntaje de calificación de la película
+            Idioma original de publicación
+            """
+            m={"Publicacion":catalog["release_date"]["elements"][i],
+              "Titulo":catalog["title"]["elements"][i],
+              "Presupuesto":catalog["budget"]["elements"][i],
+              "Recaudo":catalog["revenue"]["elements"][i],
+              "Duracion":catalog["runtime"]["elements"][i],
+              "Puntaje":catalog["revenue"]["elements"][i],
+              "Idioma":catalog["original_language"]["elements"][i]      
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+            
+            peliculas["peli"].append(m)
+            
+    if peliculas["tamanio"] > 20:
+        lista = peliculas["peli"][:5] + peliculas["peli"][-5:]
+    else:
+        lista = peliculas["peli"]
+        
+    tot_peliculas=int(peliculas.get("tamanio"))
+    if tot_peliculas==0:
+        duracion_promedio=0
+    else:
+        duracion_promedio=duracion_promedio/tot_peliculas
+        
+    return tot_peliculas, duracion_promedio, lista
 
 def req_5(catalog):
     """
