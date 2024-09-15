@@ -160,12 +160,24 @@ def get_data(catalog, id):
     }
     return pelicula
 
-def req_1(catalog):
+def req_1(catalog, min_runtime):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
+    ocurrencia = None
+    count = 0
+    for movie in catalog:
+        if movie['duracion'] >= min_runtime:
+            if ocurrencia is None:
+                ocurrencia = movie
+                count = 1
+            else:
+                count +=1
+    return ocurrencia, count
+                
     pass
+
 
 
 def req_2(catalog):
