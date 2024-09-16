@@ -222,22 +222,30 @@ def req_2(catalog, idioma_usuario):
     for i in range (ar.size(catalog['original_language'])):
         idioma = catalog['original_language']['elements'][i]
         if idioma == idioma_usuario:  
-            movies_true.append({
-                "release_date":ar.get_element(catalog['release_date'], i),
-                "runtime" : ar.get_element(catalog['runtime'], i),
-                "title": ar.get_element(catalog['title'], i),
-                "budget": ar.get_element(catalog['budget'], i),
-                "revenue": ar.get_element(catalog['revenue'], i),
-                "vote_average": ar.get_element(catalog['vote_average'], i),
-                "original_language": ar.get_element(catalog['original_language'], i)
-            })
+            m= {
+                "Duracion":catalog["runtime"]["elements"][i],
+                "Publicacion":catalog["release_date"]["elements"][i],
+                "Titulo":catalog["title"]["elements"][i],
+                "Presupuesto":catalog["budget"]["elements"][i],
+                "Recaudo":catalog["revenue"]["elements"][i],
+                "Puntaje":catalog["revenue"]["elements"][i],
+                "Idioma":catalog["original_language"]["elements"][i] 
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(catalog["revenue"]["elements"][i]) - float(catalog["budget"]["elements"][i])
+            
+            movies_true.append(m) 
+            
     ultima_pelicula = movies_true[0]
     for pelicula in movies_true:  
         fecha_pelicula_dt = datetime.strptime(pelicula["Publicacion"], "%Y-%m-%d")
         fecha_final_dt = datetime.strptime(ultima_pelicula["Publicacion"], "%Y-%m-%d")
         if fecha_pelicula_dt>fecha_final_dt:
             ultima_pelicula=pelicula
-        contador = len(movies_true)
+            
+    contador = len(movies_true)
     return ultima_pelicula, contador
 
 

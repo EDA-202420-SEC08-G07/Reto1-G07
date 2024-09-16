@@ -83,7 +83,7 @@ def print_req_2(control):
     """
     # TODO: Imprimir el resultado del requerimiento 2
     catalog=logic.load_data(control, data_dir)
-    idioma_usuario = input("Ingrese el idioma desde el cual desea buscar: ")
+    idioma_usuario = input("Ingrese el idioma (en, n, fr, zh, etc.) desde el cual desea buscar: ")
     ultima_pelicula, count = logic.req_2(catalog, idioma_usuario)
     tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
     print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
