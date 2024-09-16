@@ -204,12 +204,43 @@ def req_1(catalog, min_runtime):
 
 
 
-def req_2(catalog):
+def req_2(catalog, idioma_usuario):
     """
-    Retorna el resultado del requerimiento 2
+    Listar  las películas  con  un  lenguaje original dado, y retornar la cantidad de estas,
+    aparte retona la informacion de la ultima ultima en formato fecha que cumple con la condicion  
+
+    Args:
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        idioma_usuario (str): String de dos letras con las iniciales del lenguaje (en, fr, es)
+    
+    return:
+        Contador: cantidad de peliculas que cumplen la condicion
+        Ultima_pelicula: Diccionario con la informacion de la pelicula qud cumple la condicion (segun la fecha de publicacion)
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    
+    movies_true = []
+    for i in range (ar.size(catalog['original_language'])):
+        idioma = catalog['original_language']['elements'][i]
+        if idioma == idioma_usuario:  
+            movies_true.append({
+                "release_date":ar.get_element(catalog['release_date'], i),
+                "runtime" : ar.get_element(catalog['runtime'], i),
+                "title": ar.get_element(catalog['title'], i),
+                "budget": ar.get_element(catalog['budget'], i),
+                "revenue": ar.get_element(catalog['revenue'], i),
+                "vote_average": ar.get_element(catalog['vote_average'], i),
+                "original_language": ar.get_element(catalog['original_language'], i)
+            })
+    ultima_pelicula = movies_true[0]
+    for i in movies_true:
+        if movies_true[i]["release_date"] < ultima_pelicula["release_date"]:
+            ultima_pelicula = movies_true[i]
+    if ultima_pelicula['revenue'] !=  "Unknown" or 0 and ultima_pelicula['budget'] != "Unknown" or 0:
+        ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
+    else:
+        ultima_pelicula['ganancia'] = "Unknown" 
+    contador = len(movies_true)
+    return ultima_pelicula, contador
 
 
 def req_3(catalog):
@@ -283,12 +314,64 @@ def req_4(catalog, fecha_inicial, fecha_final, estado):
         
     return tot_peliculas, duracion_promedio, lista
 
-def req_5(catalog):
+def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
     """
-    Retorna el resultado del requerimiento 5
+    consultar las películas que tengan una duración en minutos entre un rango de 
+    tiempo en minutos dado un rango de fechas
     """
-    # TODO: Modificar el requerimiento 5
-    pass
+    # Fecha formato YYYY-MM-DD
+    duracion_promedio = 0
+    fecha_inicial_dt = datetime.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_final_dt = datetime.strptime(fecha_final, "%Y-%m-%d")
+    peliculas = {"movies": [], "tamanio": 0}
+    tamanio = int(ar.size(catalog["id"]))
+    
+    for i in range(0, tamanio):
+        salida = catalog["release_date"]["elements"][i]
+        salida_dt = datetime.strptime(salida, "%Y-%m-%d")
+        duracion = float(catalog["runtime"]["elements"][i])
+        
+        
+        if fecha_inicial_dt < salida_dt < fecha_final_dt and duracion_min < duracion < duracion_max:
+            peliculas["tamanio"]+=1
+            duracion_promedio+= duracion
+            """
+            Fecha de publicación de la película
+            Título original de la película
+            Presupuesto destinado a la realización de la película
+            Dinero recaudado por la película
+            Ganancia de final de la película
+            Tiempo de duración en minutos de la película
+            Puntaje de calificación de la película
+            Idioma original de publicación
+            """
+            m={"Publicacion":catalog["release_date"]["elements"][i],
+              "Titulo":catalog["title"]["elements"][i],
+              "Presupuesto":catalog["budget"]["elements"][i],
+              "Recaudo":catalog["revenue"]["elements"][i],
+              "Duracion":catalog["runtime"]["elements"][i],
+              "Puntaje":catalog["revenue"]["elements"][i],
+              "Idioma":catalog["original_language"]["elements"][i]      
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+            
+            peliculas["movies"].append(m)
+            
+    if peliculas["tamanio"] > 20:
+        lista = peliculas["peli"][:5] + peliculas["peli"][-5:]
+    else:
+        lista = peliculas["peli"]
+        
+    tot_peliculas=int(peliculas.get("tamanio"))
+    if tot_peliculas==0:
+        duracion_promedio=0
+    else:
+        duracion_promedio=duracion_promedio/tot_peliculas
+        
+    return tot_peliculas, duracion_promedio, lista
 
 def req_6(catalog):
     """

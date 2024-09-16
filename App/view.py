@@ -6,7 +6,7 @@ import sys
 import os
 import json
 from DataStructures.List import single_linked_list as lt
-from DataStructures.List import array_list as ar
+from DataStructures.List import array_list as lt
 
 def new_logic():
     """
