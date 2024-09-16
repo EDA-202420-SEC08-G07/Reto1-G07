@@ -175,7 +175,7 @@ def req_1(catalog, min_runtime):
     """
     movies_true =[]
     for i in range (ar.size(catalog['runtime'])):
-        duracion = catalog['runtime']['elements'][i]
+        duracion = float(catalog['runtime']['elements'][i])
         if duracion >= min_runtime:                 
             m={"Duracion":catalog["runtime"]["elements"][i],
                "Publicacion":catalog["release_date"]["elements"][i],
