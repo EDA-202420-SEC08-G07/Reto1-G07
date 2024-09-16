@@ -187,8 +187,11 @@ def req_1(catalog, min_runtime):
                 "vote_average": ar.get_element(catalog['vote_average'], i),
                 "original_language": ar.get_element(catalog['original_language'], i)
             })
-    ultima_pelicula = movies_true[-1]
-    if ultima_pelicula['revenue'] !=  "Unknown" and ultima_pelicula['budget'] != "Unknown":
+    ultima_pelicula = movies_true[0]
+    for i in movies_true:
+        if movies_true['i']["release_date"] < ultima_pelicula["release_date"]:
+            ultima_pelicula = movies_true['i']
+    if ultima_pelicula['revenue'] !=  "Unknown" or 0 and ultima_pelicula['budget'] != "Unknown" or 0:
         ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
     else:
         ultima_pelicula['ganancia'] = "Unknown" 
@@ -197,12 +200,43 @@ def req_1(catalog, min_runtime):
 
 
 
-def req_2(catalog):
+def req_2(catalog, idioma_usuario):
     """
-    Retorna el resultado del requerimiento 2
+    Listar  las películas  con  un  lenguaje original dado, y retornar la cantidad de estas,
+    aparte retona la informacion de la ultima ultima en formato fecha que cumple con la condicion  
+
+    Args:
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        idioma_usuario (str): String de dos letras con las iniciales del lenguaje (en, fr, es)
+    
+    return:
+        Contador: cantidad de peliculas que cumplen la condicion
+        Ultima_pelicula: Diccionario con la informacion de la pelicula qud cumple la condicion (segun la fecha de publicacion)
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    
+    movies_true = []
+    for i in range (ar.size(catalog['original_language'])):
+        idioma = catalog['original_language']['elements']['i']
+        if idioma == idioma_usuario:  
+            movies_true.append({
+                "release_date":ar.get_element(catalog['release_date'], i),
+                "runtime" : ar.get_element(catalog['runtime'], i),
+                "title": ar.get_element(catalog['title'], i),
+                "budget": ar.get_element(catalog['budget'], i),
+                "revenue": ar.get_element(catalog['revenue'], i),
+                "vote_average": ar.get_element(catalog['vote_average'], i),
+                "original_language": ar.get_element(catalog['original_language'], i)
+            })
+    ultima_pelicula = movies_true[0]
+    for i in movies_true:
+        if movies_true['i']["release_date"] < ultima_pelicula["release_date"]:
+            ultima_pelicula = movies_true['i']
+    if ultima_pelicula['revenue'] !=  "Unknown" or 0 and ultima_pelicula['budget'] != "Unknown" or 0:
+        ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
+    else:
+        ultima_pelicula['ganancia'] = "Unknown" 
+    contador = len(movies_true)
+    return ultima_pelicula, contador
 
 
 def req_3(catalog):
