@@ -174,24 +174,32 @@ def req_1(catalog, min_runtime):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    movies_true = []
+    movies_true =[]
     for i in range (ar.size(catalog['runtime'])):
-        duracion = catalog['runtime']['elements']['i']
-        if duracion >= min_runtime:  
-            movies_true.append({
-                "release_date":ar.get_element(catalog['release_date'], i),
-                "runtime" : duracion, 
-                "title": ar.get_element(catalog['title'], i),
-                "budget": ar.get_element(catalog['budget'], i),
-                "revenue": ar.get_element(catalog['revenue'], i),
-                "vote_average": ar.get_element(catalog['vote_average'], i),
-                "original_language": ar.get_element(catalog['original_language'], i)
-            })
-    ultima_pelicula = movies_true[-1]
-    if ultima_pelicula['revenue'] !=  "Unknown" and ultima_pelicula['budget'] != "Unknown":
-        ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
-    else:
-        ultima_pelicula['ganancia'] = "Unknown" 
+        duracion = catalog['runtime']['elements'][i]
+        if duracion >= min_runtime:                 
+            m={"Duracion":catalog["runtime"]["elements"][i],
+               "Publicacion":catalog["release_date"]["elements"][i],
+               "Titulo":catalog["title"]["elements"][i],
+               "Presupuesto":catalog["budget"]["elements"][i],
+               "Recaudo":catalog["revenue"]["elements"][i],
+               "Puntaje":catalog["revenue"]["elements"][i],
+               "Idioma":catalog["original_language"]["elements"][i]      
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(catalog["revenue"]["elements"][i]) - float(catalog["budget"]["elements"][i])
+            
+            movies_true.append(m)  
+
+    ultima_pelicula = movies_true[0]
+    for pelicula in movies_true:  
+        fecha_pelicula_dt = datetime.strptime(pelicula["Publicacion"], "%Y-%m-%d")
+        fecha_final_dt = datetime.strptime(ultima_pelicula["Publicacion"], "%Y-%m-%d")
+        if fecha_pelicula_dt>fecha_final_dt:
+            ultima_pelicula=pelicula
+        
     contador = len(movies_true)
     return ultima_pelicula, contador     
 
