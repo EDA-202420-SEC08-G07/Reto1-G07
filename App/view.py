@@ -71,10 +71,10 @@ def print_req_1(control):
     catalog=logic.load_data(control, data_dir)
     min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
     ultima_pelicula, count = logic.req_1(catalog, min_runtime)
-    
+    tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
     print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
     print("La ultima pelicula que cumple con este criterio es: ")
-    print(tabulate(ultima_pelicula))
+    print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
 
 
 def print_req_2(control):
