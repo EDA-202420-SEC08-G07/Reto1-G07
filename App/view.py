@@ -7,6 +7,8 @@ import os
 import json
 from DataStructures.List import single_linked_list as lt
 from DataStructures.List import array_list as lt
+from tabulate import tabulate
+
 
 def new_logic():
     """
@@ -72,7 +74,7 @@ def print_req_1(control):
     
     print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
     print("La ultima pelicula que cumple con este criterio es: ")
-    print(ultima_pelicula)
+    print(tabulate(ultima_pelicula))
 
 
 def print_req_2(control):
@@ -80,7 +82,14 @@ def print_req_2(control):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    catalog=logic.load_data(control, data_dir)
+    idioma_usuario = input("Ingrese el idioma desde el cual desea buscar: ")
+    ultima_pelicula, count = logic.req_2(catalog, idioma_usuario)
+    tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
+    print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
+    print("La ultima pelicula que cumple con este criterio es: ")
+    print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+
 
 
 def print_req_3(control):
@@ -89,6 +98,13 @@ def print_req_3(control):
     """
     # TODO: Imprimir el resultado del requerimiento 3
     pass
+    catalog=logic.load_data(control, data_dir)
+    min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
+    ultima_pelicula, count = logic.req_1(catalog, min_runtime)
+    
+    print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
+    print("La ultima pelicula que cumple con este criterio es: ")
+    print(ultima_pelicula)
 
 
 def print_req_4(control):

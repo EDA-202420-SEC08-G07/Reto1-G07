@@ -232,14 +232,12 @@ def req_2(catalog, idioma_usuario):
                 "original_language": ar.get_element(catalog['original_language'], i)
             })
     ultima_pelicula = movies_true[0]
-    for i in movies_true:
-        if movies_true[i]["release_date"] < ultima_pelicula["release_date"]:
-            ultima_pelicula = movies_true[i]
-    if ultima_pelicula['revenue'] !=  "Unknown" or 0 and ultima_pelicula['budget'] != "Unknown" or 0:
-        ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
-    else:
-        ultima_pelicula['ganancia'] = "Unknown" 
-    contador = len(movies_true)
+    for pelicula in movies_true:  
+        fecha_pelicula_dt = datetime.strptime(pelicula["Publicacion"], "%Y-%m-%d")
+        fecha_final_dt = datetime.strptime(ultima_pelicula["Publicacion"], "%Y-%m-%d")
+        if fecha_pelicula_dt>fecha_final_dt:
+            ultima_pelicula=pelicula
+        contador = len(movies_true)
     return ultima_pelicula, contador
 
 
