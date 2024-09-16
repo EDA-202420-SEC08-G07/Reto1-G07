@@ -216,7 +216,7 @@ def req_2(catalog, idioma_usuario):
     
     movies_true = []
     for i in range (ar.size(catalog['original_language'])):
-        idioma = catalog['original_language']['elements']['i']
+        idioma = catalog['original_language']['elements'][i]
         if idioma == idioma_usuario:  
             movies_true.append({
                 "release_date":ar.get_element(catalog['release_date'], i),
@@ -229,8 +229,8 @@ def req_2(catalog, idioma_usuario):
             })
     ultima_pelicula = movies_true[0]
     for i in movies_true:
-        if movies_true['i']["release_date"] < ultima_pelicula["release_date"]:
-            ultima_pelicula = movies_true['i']
+        if movies_true[i]["release_date"] < ultima_pelicula["release_date"]:
+            ultima_pelicula = movies_true[i]
     if ultima_pelicula['revenue'] !=  "Unknown" or 0 and ultima_pelicula['budget'] != "Unknown" or 0:
         ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
     else:
