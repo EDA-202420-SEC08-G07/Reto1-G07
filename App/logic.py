@@ -379,8 +379,10 @@ def req_6(catalog, idioma_org, anio_inicial, anio_final):
     """
     Retorna el resultado del requerimiento 6
     """
-    # TODO: Modificar el requerimiento 6
-    pass
+    tamanio = int(ar.size(catalog["id"]))
+    for i in range (0, tamanio):
+        print('hola')
+    
 
 
 def req_7(catalog):
