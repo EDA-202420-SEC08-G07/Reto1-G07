@@ -314,6 +314,18 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
     """
     consultar las películas que tengan una duración en minutos entre un rango de 
     tiempo en minutos dado un rango de fechas
+    args:
+    
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        fecha_inicial (str): La fecha inicial del periodo a consultar (con formato "%Y-%m-%d")
+        fecha_final (str): La fecha final del periodo a consultar (con formato "%Y-%m-%d").
+        duracion_min (int): Tiempo minimo que dura la pelicula
+        duracion_max (int): Tiempo maximo que dura la pelicula
+    return:
+        total de peliculas que cumplen la condicion
+        La duracion promedio de las peliculas que cumplen el criterio
+        Lista de diccionarios de las peliculas que cumplen el requisito, si hay mas de 20, retornar 
+        solo las primeras 5 y las ultimas 5
     """
     # Fecha formato YYYY-MM-DD
     duracion_promedio = 0
@@ -331,17 +343,7 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
         if fecha_inicial_dt < salida_dt < fecha_final_dt and duracion_min < duracion < duracion_max:
             peliculas["tamanio"]+=1
             duracion_promedio+= duracion
-            """
-            Fecha de publicación de la película
-            Título original de la película
-            Presupuesto destinado a la realización de la película
-            Dinero recaudado por la película
-            Ganancia de final de la película
-            Tiempo de duración en minutos de la película
-            Puntaje de calificación de la película
-            Idioma original de publicación
-            """
-            m={"Publicacion":catalog["release_date"]["elements"][i],
+            movie={"Publicacion":catalog["release_date"]["elements"][i],
               "Titulo":catalog["title"]["elements"][i],
               "Presupuesto":catalog["budget"]["elements"][i],
               "Recaudo":catalog["revenue"]["elements"][i],
@@ -349,27 +351,27 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
               "Puntaje":catalog["revenue"]["elements"][i],
               "Idioma":catalog["original_language"]["elements"][i]      
             }
-            if isinstance(m.get("Presupuesto"), str):
-                m["Ganancias"] = "Unknown"
+            if isinstance(movie.get("Presupuesto"), str):
+                movie["Ganancias"] = "Unknown"
             else:
-                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+                movie["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
             
-            peliculas["movies"].append(m)
+            peliculas["movies"].append(movie)
             
     if peliculas["tamanio"] > 20:
         lista = peliculas["peli"][:5] + peliculas["peli"][-5:]
     else:
         lista = peliculas["peli"]
         
-    tot_peliculas=int(peliculas.get("tamanio"))
-    if tot_peliculas==0:
+    total_peliculas=int(peliculas.get("tamanio"))
+    if total_peliculas==0:
         duracion_promedio=0
     else:
-        duracion_promedio=duracion_promedio/tot_peliculas
+        duracion_promedio=duracion_promedio/total_peliculas
         
-    return tot_peliculas, duracion_promedio, lista
+    return total_peliculas, duracion_promedio, lista
 
-def req_6(catalog):
+def req_6(catalog, idioma_org, anio_inicial, anio_final):
     """
     Retorna el resultado del requerimiento 6
     """
