@@ -66,21 +66,13 @@ def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
     catalog=logic.load_data(control, data_dir)
     min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
     ultima_pelicula, count = logic.req_1(catalog, min_runtime)
     
-    print(f"El total de peliculas es de: {count}")
-    print(f"Película encontrada con duración mínima de {min_runtime} minutos:")
-    print(f"Duración: {ultima_pelicula['runtime']} minutos")
-    print(f"Fecha de publicación: {ultima_pelicula['release_date']}")
-    print(f"Título original: {ultima_pelicula['title']}")
-    print(f"Presupuesto: {ultima_pelicula['budget']}")
-    print(f"Recaudación: {ultima_pelicula['revenue']}")
-    print(f"Ganancias: {ultima_pelicula['ganancias']}")
-    print(f"Calificación: {ultima_pelicula['vote_average']}")
-    print(f"Idioma original: {ultima_pelicula['original_language']}")
+    print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
+    print("La ultima pelicula que cumple con este criterio es: ")
+    print(ultima_pelicula)
 
 
 def print_req_2(control):
