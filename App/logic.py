@@ -173,7 +173,6 @@ def req_1(catalog, min_runtime):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
     movies_true =[]
     for i in range (ar.size(catalog['runtime'])):
         duracion = catalog['runtime']['elements'][i]

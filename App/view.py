@@ -66,7 +66,6 @@ def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
     catalog=logic.load_data(control, data_dir)
     min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
     ultima_pelicula, count = logic.req_1(catalog, min_runtime)
