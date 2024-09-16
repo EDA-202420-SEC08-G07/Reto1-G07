@@ -174,18 +174,26 @@ def req_1(catalog, min_runtime):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    ocurrencia = None
-    count = 0
-    for movie in catalog:
-        if movie['duracion'] >= min_runtime:
-            if ocurrencia is None:
-                ocurrencia = movie
-                count = 1
-            else:
-                count +=1
-    return ocurrencia, count
-                
-    pass
+    movies_true = []
+    for i in range (ar.size(catalog['runtime'])):
+        duracion = catalog['runtime']['elements']['i']
+        if duracion >= min_runtime:  
+            movies_true.append({
+                "release_date":ar.get_element(catalog['release_date'], i),
+                "runtime" : duracion, 
+                "title": ar.get_element(catalog['title'], i),
+                "budget": ar.get_element(catalog['budget'], i),
+                "revenue": ar.get_element(catalog['revenue'], i),
+                "vote_average": ar.get_element(catalog['vote_average'], i),
+                "original_language": ar.get_element(catalog['original_language'], i)
+            })
+    ultima_pelicula = movies_true[-1]
+    if ultima_pelicula['revenue'] !=  "Unknown" and ultima_pelicula['budget'] != "Unknown":
+        ultima_pelicula['ganancia'] = ultima_pelicula['revenue'] - ultima_pelicula['budget'] 
+    else:
+        ultima_pelicula['ganancia'] = "Unknown" 
+    contador = len(movies_true)
+    return ultima_pelicula, contador     
 
 
 
