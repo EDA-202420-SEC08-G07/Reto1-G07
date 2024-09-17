@@ -732,20 +732,20 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
         
         ganancias_acumuladas += ganancias_pelicula
         
-        generos_pelicula = []
-        for genero in catalog["genres"]["elements"]:
-            if genero["id_pelicula"] == id_pelicula:
-                generos_pelicula.append(genero["nombre_genero"])
-        
         # Filtro todos los criterios
-        if anio_ingresado==anio_peli and estado.lower()=="released" and genero_ingresado in generos_pelicula:
-            conteo+=1
-            suma_votos+=votacion
-            suma_tiempo+=duracion
-            if mejor is None or mejor<votacion:
-                mejor=votacion
-            if peor is None or peor>votacion:
-                peor=votacion
+        if anio_ingresado==anio_peli and estado.lower()=="released":
+            generos_pelicula = []
+            for genero in catalog["genres"]["elements"]:
+                if genero["id_pelicula"] == id_pelicula:
+                    generos_pelicula.append(genero["nombre_genero"])
+            if genero_ingresado in generos_pelicula:
+                conteo+=1
+                suma_votos+=votacion
+                suma_tiempo+=duracion
+                if mejor is None or mejor<votacion:
+                    mejor=votacion
+                if peor is None or peor>votacion:
+                    peor=votacion
                 
     if conteo==0:
         votos_promedio=0
