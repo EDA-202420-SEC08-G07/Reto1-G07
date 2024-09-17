@@ -369,17 +369,17 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
             peliculas["movies"].append(movie)
             
     if peliculas["tamanio"] > 20:
-        lista = peliculas["peli"][:5] + peliculas["peli"][-5:]
+        lista_peliculas = peliculas["movies"][:5] + peliculas["movies"][-5:]
     else:
-        lista = peliculas["peli"]
+        lista_peliculas = peliculas["movies"]
         
-    total_peliculas=int(peliculas.get("tamanio"))
+    total_peliculas = int(peliculas.get("tamanio"))
     if total_peliculas==0:
         duracion_promedio=0
     else:
         duracion_promedio=duracion_promedio/total_peliculas
         
-    return total_peliculas, duracion_promedio, lista
+    return total_peliculas, duracion_promedio, lista_peliculas
 
 def req_6(catalog, idioma_org, anio_inicial, anio_final):
     """

@@ -134,13 +134,43 @@ def print_req_4(control):
     return None
 
 
-def print_req_5(control, catalog):
+def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO
-    pass
+    catalog= logic.load_data(control, data_dir)
+    fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
+    fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
+    duracion_min= float(input("Ingrese el tiempo minimo de la pelicula que desea buscar: "))
+    duracion_max = float(input("Ingrese el tiempo maximo de la pelicula que desea buscar: "))
+    tot_peliculas, duracion_promedio, peliculas =logic.req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max)
     
+    print("El total de peliculas es de: "+  str(tot_peliculas))
+    print("La duracion promedio de las peliculas es de: "+ str(round(duracion_promedio, 2)))
+    
+    if tot_peliculas > 20:
+        print("\nLas primeras 5 películas entre las fechas son:")
+        for i in range(5):
+            tabla_pelicula = [[k, v] for k, v in peliculas[i].items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+            print("\n")
+            
+        print("Las últimas 5 películas entre las fechas son:")
+        for k in range(len(peliculas) - 5, len(peliculas)):
+            tabla_pelicula = [[key, val] for key, val in peliculas[k].items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+            print("\n")
+    
+    else:
+        print("\nLa lista de películas encontradas entre las fechas es:")
+        for j in range(len(peliculas)):
+            tabla_pelicula = [[key, val] for key, val in peliculas[j].items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+            print("\n")
+            
+    return None
+
 def print_req_6(control):
     """
         Función que imprime la solución del Requerimiento 6 en consola
