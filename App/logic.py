@@ -199,7 +199,18 @@ def get_data(catalog, id):
 
 def req_1(catalog, min_runtime):
     """
-    Retorna el resultado del requerimiento 1
+    Listar las películas con una duracion minima en minutos, y retornar la cantidad de estas,
+    aparte retona la informacion de la ultima ultima en formato fecha que cumple con la condicion  
+
+    Args:
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        min_runtime (float): Flotante (que puede ser un int) que dicta la duracion minima de la pelicula 
+        (es inclusivo, si se le pasa por ejemplo 90, va a tomar en cuenta las peliculas que duren 90 minutos
+        minimo, y no las que duren mas que esto (desde 91 en adelante))
+    
+    return:
+        Contador: cantidad de peliculas que cumplen la condicion
+        Ultima_pelicula: Diccionario con la informacion de la pelicula qud cumple la condicion (segun la fecha de publicacion)
     """
     movies_true =[]
     for i in range (ar.size(catalog['runtime'])):
@@ -489,13 +500,35 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
     if total_peliculas==0:
         duracion_promedio=0
     else:
-        duracion_promedio=duracion_promedio/total_peliculas
+        duracion_promedio = duracion_promedio/total_peliculas
         
     return total_peliculas, duracion_promedio, lista_peliculas
 
 def req_6(catalog, idioma_org, anio_inicial, anio_final):
     """
-    Retorna el resultado del requerimiento 6.
+    Retorna las estadísticas de las películas publicadas en un idioma dado durante un rango de años.
+
+    Este requerimiento analiza las películas en el catálogo que fueron publicadas 
+    (status = "released") en un idioma específico y dentro de un periodo de años determinado. 
+    Para cada año en el rango especificado, la función recopila la siguiente información:
+    
+    - El total de películas publicadas en el idioma de consulta en ese año.
+    - El promedio de votación promedio de las películas publicadas en ese año.
+    - El tiempo promedio de duración de las películas publicadas en ese año.
+    - Las ganancias acumuladas por todas las películas publicadas en ese año (calculadas como la diferencia entre recaudación y presupuesto).
+    - El título y la votación de la mejor película publicada en ese año.
+    - El título y la votación de la peor película publicada en ese año.
+    
+    Args:
+        catalog (dict): El catálogo de películas que contiene todos los datos relevantes (fechas, votos, duración, etc.).
+        idioma_org (str): El código del idioma original de las películas (por ejemplo: 'en' para inglés, 'fr' para francés).
+        anio_inicial (int): El año inicial del periodo a analizar (por ejemplo, 2000).
+        anio_final (int): El año final del periodo a analizar (por ejemplo, 2020).
+    
+    Returns:
+        dict_anios (dict): diccionario de diccionario con las llaves como los anios que entran dentro del rango
+        de consolta y con los values con la respectiva informacion estadistica de cada uno de estos anios
+
     """
     dict_anios = {}
     
@@ -555,7 +588,6 @@ def req_6(catalog, idioma_org, anio_inicial, anio_final):
             "mejor_pelicula": mejor_pelicula,
             "peor_pelicula": peor_pelicula
         }
-    
     return dict_anios
 
     
