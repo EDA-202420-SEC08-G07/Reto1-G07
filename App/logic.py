@@ -48,11 +48,11 @@ def new_logic():
 
 # Funciones para la carga de datos
 
-def load_data(catalog, data_dir):
+def load_data(catalog, data_dir, nombre_archivo):
     """
     Carga los datos del reto
     """
-    movie_file = data_dir + 'movies-small.csv'
+    movie_file = data_dir + nombre_archivo
     movies = csv.DictReader(open(movie_file, encoding='utf-8'))
 
     for movie in movies:

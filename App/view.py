@@ -36,7 +36,8 @@ def load_data(control, data_dir):
     """
     Carga los datos
     """
-    catalog=logic.load_data(control, data_dir)
+    nombre_archivo= input("Ingrese el nombre del archivo ('movies-small.csv'): ")
+    catalog=logic.load_data(control, data_dir, nombre_archivo)
     print(print_first_and_last_movies(catalog))
     return catalog
 
