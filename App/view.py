@@ -218,12 +218,41 @@ def print_req_6(control, data):
 
 
 
-def print_req_7(control):
+def print_req_7(control, data):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 7
-    pass
+    catalog = data
+    companie = input('Ingrese el nombre de la compañia deseada: ')
+    fecha_inicial = input('Ingrese el año donde quiere que inicie la busqueda: ')
+    fecha_final = input('Ingrese la fecha donde quiere que finalice la busqueda: ')
+    resultado = logic.req_7(data, companie, fecha_inicial, fecha_final)
+    
+    if not resultado:
+        print("No se encontraron películas producidas por la compañía en el rango de años especificado.")
+        return None
+    #crear tabla para el tabulate con los datos por año
+    table_data = []
+    for year, datos in resultado.items():
+        
+        
+        table_data.append([
+            year, 
+            datos['total_peliculas'], 
+            round(datos['promedio_votacion'], 2),
+            round(datos['promedio_duracion'], 2),
+            datos['total_ganancias'],
+            datos['mejor_pelicula'],
+            datos['mejor_votacion'],
+            datos['peor_pelicula'],
+            datos['peor_votacion']
+        ])
+    
+    print(tabulate(table_data, headers=[
+        "Año", "Total Películas", "Promedio Votación", 
+        "Promedio Duración", "Ganancias Acumuladas", 
+        "Mejor Película", "Mejor Votación", 
+        "Peor Película", "Peor Votación"], tablefmt="pretty"))
 
 
 def print_req_8(catalog, data):

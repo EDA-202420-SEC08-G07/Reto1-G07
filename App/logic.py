@@ -593,13 +593,101 @@ def req_6(catalog, idioma_org, anio_inicial, anio_final):
     
 
 
-def req_7(catalog):
+def req_7(catalog, companie_name, fecha_inicial, fecha_final):
     """
-    Retorna el resultado del requerimiento 7
-    """
-    # TODO: Modificar el requerimiento 7
-    pass
+    Analiza las películas publicadas por una compañía productora en un periodo de años.
+    
+    Args:
+    - catalog: El catálogo de películas.
+    - company_name: Nombre de la compañía productora a analizar.
+    - year_start: Año inicial del rango.
+    - year_end: Año final del rango.
 
+    Returns:
+    - Una lista con las estadísticas de las películas producidas por la compañía en cada año.
+    """
+    fecha_inicial = int(fecha_inicial)
+    fecha_final = int(fecha_final)
+
+    tamanio = int(ar.size(catalog['release_date']))
+    
+    data_by_year = {}
+    
+    for i in range(tamanio):
+        #sacar fecha de publicación y extraer el año
+        fecha_movie = ar.get_element(catalog['release_date'], i+1)
+        fecha_movie_dt = datetime.strptime(fecha_movie, "%Y-%m-%d")
+        year_movie = fecha_movie_dt.year
+        
+        #filtrar por el por rango de años
+        if year_movie is not None and fecha_inicial <= year_movie <= fecha_final:
+            estado = ar.get_element(catalog['status'], i+1)
+            if estado =='Released':
+                #Obtener la lista de compañías productoras y buscar la compañía objetivo
+                compania_encontrada = False
+                #obtener id de la pelicula
+                id = ar.get_element(catalog['id'], i+1)
+                
+                for companies in catalog['production_companies']['elements']:
+                    if id == companies['id_pelicula']:
+                        #comparar nombre de la compañia
+                        if companies['nombre_compania'].strip().lower() == companie_name.strip().lower():
+                            compania_encontrada = True
+                #procesar peliculas de la compañia buscada 
+                if compania_encontrada:
+                    pelicula = get_data(catalog, ar.get_element(catalog['id'], i+1))
+                
+                    if pelicula['Duracion'] == 'Unknown':
+                        duracion = 0
+                    else:
+                        duracion = float(pelicula['Duracion'])
+                    
+                    if pelicula['Promedio_Votos'] == "Unknown":
+                        votacion = 0
+                    else:
+                        votacion = float(pelicula['Promedio_Votos'])
+                
+                    if pelicula['Ganancias'] == "Unknown":
+                        ganancias = 0
+                    else:
+                        ganancias = float(pelicula['Ganancias'])
+                        #añadir la pelicula a los datos del año correspondiente
+                    if year_movie not in data_by_year:
+                        data_by_year[year_movie] = {
+                            'total_peliculas': 0,
+                            'total_votacion': 0,
+                            'total_duracion': 0,
+                            'total_ganancias': 0,
+                            'mejor_pelicula': None,
+                            'peor_pelicula': None,
+                            'mejor_votacion': -1,
+                            'peor_votacion': 99999999999999999999
+                        }
+                    year_data = data_by_year[year_movie]
+                    year_data['total_peliculas'] += 1
+                    year_data['total_votacion'] += votacion
+                    year_data['total_duracion'] += duracion
+                    year_data['total_ganancias'] += ganancias
+                    
+                    # Actualizar mejor y peor película
+                    if votacion > year_data['mejor_votacion']:
+                        year_data['mejor_votacion'] = votacion
+                        year_data['mejor_pelicula'] = pelicula['Titulo']
+
+                    if votacion < year_data['peor_votacion']:
+                        year_data['peor_votacion'] = votacion
+                        year_data['peor_pelicula'] = pelicula['Titulo']
+                        
+    # Calcular los promedios para cada año
+    for year, data in data_by_year.items():
+        if data['total_peliculas'] > 0:
+            data['promedio_votacion'] = data['total_votacion'] / data['total_peliculas']
+            data['promedio_duracion'] = data['total_duracion'] / data['total_peliculas']
+        else:
+            data['promedio_votacion'] = 0
+            data['promedio_duracion'] = 0
+
+    return data_by_year
 
 def req_8(catalog, anio_ingresado, genero_ingresado):
     """Conocer la estadística de las películas publicadas en un año y de ungénerodados
