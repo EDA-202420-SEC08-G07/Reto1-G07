@@ -629,6 +629,9 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
         votos_promedio=round(suma_votos/conteo,2)   
         tiempo_promedio=round(suma_tiempo/conteo,2)     
     
+    if ganancias_acumuladas==0:
+        ganancias_acumuladas="Undefined"
+        
     dict_anio = {"total_pelis":conteo,
                  "Puntuacion_promedio":votos_promedio,
                  "Tiempo_promedio":tiempo_promedio,
