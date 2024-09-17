@@ -317,7 +317,7 @@ def req_3(catalog, language, fecha_inicial, fecha_final):
             if isinstance(m.get("Presupuesto"), str):
                 m["Ganancias"] = "Unknown"
             else:
-                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i+1)) - float(ar.get_element(catalog["budget"], i+1))
             
             peliculas["peli"].append(m)
     
@@ -405,7 +405,7 @@ def req_4(catalog, fecha_inicial, fecha_final, estado):
             if isinstance(m.get("Presupuesto"), str):
                 m["Ganancias"] = "Unknown"
             else:
-                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i+1)) - float(ar.get_element(catalog["budget"], i+1))
             
             peliculas["peli"].append(m)
     
@@ -476,7 +476,7 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
             if isinstance(movie.get("Presupuesto"), str):
                 movie["Ganancias"] = "Unknown"
             else:
-                movie["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+                movie["Ganancias"] = float(ar.get_element(catalog["revenue"], i+1)) - float(ar.get_element(catalog["budget"], i+1))
             
             peliculas["movies"].append(movie)
             
