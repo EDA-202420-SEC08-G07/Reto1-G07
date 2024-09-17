@@ -759,12 +759,12 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
     if ganancias_acumuladas==0:
         ganancias_acumuladas="Undefined"
         
-    dict_anio = {"total_pelis":conteo,
+    dict_anio = {"Peliculas_totales":conteo,
                  "Puntuacion_promedio":votos_promedio,
                  "Tiempo_promedio":tiempo_promedio,
                  "Ganancias_acumuladas":ganancias_acumuladas,
-                 "Mejor_peli":"La mejor pelicula fue: "+str(nombre_mejor)+" con un promedio de: "+str(mejor),
-                 "Peor_peli":"La peor pelicula fue: "+str(nombre_peor)+" con un promedio de: "+str(peor)
+                 "Mejor_pelicula":"La mejor pelicula fue: "+str(nombre_mejor)+" con un promedio de: "+str(mejor),
+                 "Peor_pelicula":"La peor pelicula fue: "+str(nombre_peor)+" con un promedio de: "+str(peor)
                 }
     
     return dict_anio
