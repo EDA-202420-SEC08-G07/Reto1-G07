@@ -154,7 +154,7 @@ def print_req_4(control, data):
     return None
 
 
-def print_req_5(control):
+def print_req_5(control, data):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
@@ -191,12 +191,33 @@ def print_req_5(control):
             
     return None
 
-def print_req_6(control):
+def print_req_6(control, data):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    catalog = logic.load_data(control, data_dir)
+    idioma_org = input("Ingrese el idioma original de las películas (ej.: 'en', 'fr', 'zh'): ")
+    anio_inicial = int(input("Ingrese el año inicial del periodo a consultar (formato YYYY): "))
+    anio_final = int(input("Ingrese el año final del periodo a consultar (formato YYYY): "))
+    resultados = logic.req_6(catalog, idioma_org, anio_inicial, anio_final)
+
+    for anio, datos in resultados.items():
+        print(f"Resultados para el año {anio}:")
+        print(f"Total de películas: {datos['total_peliculas']}")
+        print(f"Votación promedio: {datos['votacion_promedio_total']}")
+        print(f"Duración promedio: {datos['duracion_promedio_total']} minutos")
+        print(f"Ganancias acumuladas: {datos['ganancias_acumuladas']}")
+        if datos['mejor_pelicula'] is not None:
+            print(f"Mejor película: {datos['mejor_pelicula']['titulo']} con una votación promedio de: {datos['mejor_pelicula']['votacion']}")
+        else:
+            print("Mejor película: No disponible")
+        if datos['peor_pelicula'] is not None:
+            print(f"Peor película: {datos['peor_pelicula']['titulo']} con una votación promedio de: {datos['peor_pelicula']['votacion']}")
+        else:
+            print("Peor película: No disponible")
+        print("\n")
+
 
 
 def print_req_7(control):
