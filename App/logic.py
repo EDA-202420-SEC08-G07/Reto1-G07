@@ -204,7 +204,7 @@ def req_1(catalog, min_runtime):
 
 def req_2(catalog, idioma_usuario):
     """
-    Listar  las películas  con  un  lenguaje original dado, y retornar la cantidad de estas,
+    Listar las películas con un lenguaje original dado, y retornar la cantidad de estas,
     aparte retona la informacion de la ultima ultima en formato fecha que cumple con la condicion  
 
     Args:
@@ -384,8 +384,30 @@ def req_6(catalog, idioma_org, anio_inicial, anio_final):
     Retorna el resultado del requerimiento 6
     """
     tamanio = int(ar.size(catalog["id"]))
+    total_peliculas = 0
+    votacion_total = 0
+    duracion_total = 0
+    pp = None
+    mp = None
     for i in range (0, tamanio):
-        print('hola')
+        fecha = catalog["release_date"]["elements"][i]
+        anio = int(fecha[:4])
+        status = catalog["status"]["elements"][i]
+        idioma = catalog["original_language"]["elements"][i]
+        if status is "released" and idioma == idioma_org and anio_inicial <= anio >= anio_final:
+            total_peliculas +=1
+            votacion_total += catalog["vote_average"]["elements"][i] 
+            duracion_total += catalog["runtime"]["elements"][i]
+            if pp is None:
+                pp = i
+            if pp is not None and float(catalog["vote_average"]["elements"][i]) < float(["vote_average"]["elements"][pp]):
+                pp = i
+            if mp is None:
+                mp = i
+            if mp is not None and float(catalog["vote_average"]["elements"][i]) > float(["vote_average"]["elements"][mp]):
+                mp = i  
+        
+        
     
 
 
