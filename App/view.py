@@ -233,6 +233,7 @@ def print_req_8(catalog, data):
     catalog=data
     anio=int(input("Ingrese el año donde desea buscar la informacion: "))
     genero=input("Ingrese el genero que desea consultar: ")
+    print("Espere que cargue la informacion")
     diccionario=logic.req_8(catalog, anio, genero)
     tabla_pelicula = [[k, v] for k, v in diccionario.items()]
     print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))

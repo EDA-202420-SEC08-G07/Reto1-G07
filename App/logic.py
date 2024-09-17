@@ -600,10 +600,12 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
         estado=catalog["status"]["elements"][i]
         votacion=float(catalog["vote_average"]["elements"][i])
         duracion=float(catalog["runtime"]["elements"][i])
-        if isinstance(catalog["revenue"]["elements"][i], str):
-            ganancias_acumuladas=ganancias_acumuladas
+        if isinstance(catalog["revenue"]["elements"][i], str) or isinstance(catalog["budget"]["elements"][i], str):
+            ganancias_pelicula = 0
         else:
-            ganancias_acumuladas+=float(catalog["revenue"]["elements"][i]) - float(catalog["budget"]["elements"][i])
+            ganancias_pelicula = float(catalog["revenue"]["elements"][i]) - float(catalog["budget"]["elements"][i])
+        
+        ganancias_acumuladas += ganancias_pelicula
         
         generos_pelicula = []
         for genero in catalog["genres"]["elements"]:
