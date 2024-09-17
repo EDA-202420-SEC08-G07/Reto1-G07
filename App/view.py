@@ -74,11 +74,15 @@ def print_req_1(control, data):
     """
     catalog=data
     min_runtime = float(input("Ingrese el tiempo minimo desde el cual desea buscar: "))
+    start_time = time.time()
     ultima_pelicula, count = logic.req_1(catalog, min_runtime)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
     print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
     print("La ultima pelicula que cumple con este criterio es: ")
     print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 
 def print_req_2(control, data):
@@ -164,7 +168,10 @@ def print_req_5(control, data):
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     duracion_min= float(input("Ingrese el tiempo minimo de la pelicula que desea buscar: "))
     duracion_max = float(input("Ingrese el tiempo maximo de la pelicula que desea buscar: "))
+    start_time = time.time()
     tot_peliculas, duracion_promedio, peliculas =logic.req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     
     print("El total de peliculas es de: "+  str(tot_peliculas))
     print("La duracion promedio de las peliculas es de: "+ str(round(duracion_promedio, 2)))
@@ -189,7 +196,7 @@ def print_req_5(control, data):
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
             print("\n")
             
-    return None
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 def print_req_6(control, data):
     """
@@ -199,8 +206,10 @@ def print_req_6(control, data):
     idioma_org = input("Ingrese el idioma original de las películas (ej.: 'en', 'fr', 'zh'): ")
     anio_inicial = int(input("Ingrese el año inicial del periodo a consultar (formato YYYY): "))
     anio_final = int(input("Ingrese el año final del periodo a consultar (formato YYYY): "))
+    start_time = time.time()
     resultados = logic.req_6(catalog, idioma_org, anio_inicial, anio_final)
-
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     for anio, datos in resultados.items():
         print(f"Resultados para el año {anio}:")
         print(f"Total de películas: {datos['total_peliculas']}")
@@ -216,6 +225,7 @@ def print_req_6(control, data):
         else:
             print("Peor película: No disponible")
         print("\n")
+        print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 
 
