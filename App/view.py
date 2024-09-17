@@ -94,19 +94,24 @@ def print_req_2(control, data):
 
 
 
-def print_req_3(control):
+def print_req_3(control, data):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
-    catalog=logic.load_data(control, data_dir)
-    min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
-    ultima_pelicula, count = logic.req_1(catalog, min_runtime)
+    catalog=data
+    language = input('Por favor ingrese el lenguaje a buscar: ')
+    fecha_inicial = input('Por favor ingrese la fecha inicial del periodo a consultar: ')
+    fecha_final = input('Por favor ingrese la fecha final del periodo a consultar: ')
+    resultado = logic.req_3(data, language, fecha_inicial, fecha_final)
+    total_peliculas = resultado[0]
+    peliculas = resultado[1]
+    promedio = resultado[2]
     
-    print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
-    print("La ultima pelicula que cumple con este criterio es: ")
-    print(ultima_pelicula)
+    print(f"El total de peliculas son: {total_peliculas} \n")
+    print(f"Este fue el promedio de duración de las peliculas: {promedio} minutos\n")
+    print(f"Este es el listado de peliculas: \n")
+    print(tabulate(peliculas))
 
 
 def print_req_4(control, data):

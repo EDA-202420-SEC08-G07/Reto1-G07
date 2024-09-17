@@ -247,12 +247,48 @@ def req_2(catalog, idioma_usuario):
     return ultima_pelicula, contador
 
 
-def req_3(catalog):
+def req_3(catalog, language, date1, date2):
+    """
+    Retorna el resultado del requerimiento 3
+    
+    """
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
-    pass
+    """
+    Función que procesa el requerimiento 3
+    """
+    language = language.strip().lower()
+    lst = []
+    tiempo_movie = 0
+    contador = 0
+    fecha_1 = datetime.strptime(date1, "%Y-%m-%d")
+    fecha_2 = datetime.strptime(date2, "%Y-%m-%d")
+    tamanio = ar.size(catalog['release_date'])
+    for i in range(tamanio):
+        fecha_movie = catalog['release_date']['elements'][i]
+        fecha_movie_dt = datetime.strptime(fecha_movie, "%Y-%m-%d")
+
+        if fecha_movie_dt >= fecha_1 and fecha_movie_dt <= fecha_2:
+            idioma = catalog['original_language']['elements'][i].strip().lower()
+            
+            if idioma == language:
+                id = catalog['id']['elements'][i]
+                pelicula = get_data(catalog, id)
+                contador += 1
+                tiempo_movie += round(float(pelicula['Duracion']), 3)
+                lst.append(pelicula)
+    
+    if contador > 0:
+        promedio = tiempo_movie / contador
+    else:
+        promedio = 0
+    
+    if len(lst) > 20:
+        lst = lst[:5] + lst[-5:]
+
+    return contador, lst, promedio
+    
 
 
 def ordenar_peliculas_por_fecha_insertion(peliculas):
