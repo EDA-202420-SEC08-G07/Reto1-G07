@@ -91,12 +91,15 @@ def print_req_2(control, data):
     """
     catalog=data
     idioma_usuario = input("Ingrese el idioma (en, n, fr, zh, etc.) desde el cual desea buscar: ")
+    start_time = time.time()
     ultima_pelicula, count = logic.req_2(catalog, idioma_usuario)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
     print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
     print("La ultima pelicula que cumple con este criterio es: ")
     print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
-
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 
 def print_req_3(control, data):
@@ -107,7 +110,10 @@ def print_req_3(control, data):
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     idioma=input("Ingrese el idioma del cual quiere saber la pelicula (en, it, fr): ")
+    start_time = time.time()
     tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas=logic.req_3(catalog, idioma, fecha_inicial, fecha_final)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     
     print("El total de peliculas en "+idioma+" es de: "+  str(tot_peliculas))
     print("La duracion promedio de las peliculas en "+idioma+" es de: "+ str(round(duracion_promedio, 2)))
@@ -127,6 +133,7 @@ def print_req_3(control, data):
             tabla_pelicula = [[k, v] for k, v in pelicula.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
     return None
 def print_req_4(control, data):
     """
@@ -136,7 +143,10 @@ def print_req_4(control, data):
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     estado=input("Ingrese el estado de la pelicula que desea buscar: ")
+    start_time = time.time()
     tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas=logic.req_4(catalog, fecha_inicial, fecha_final, estado)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     
     print("El total de peliculas es de: "+  str(tot_peliculas))
     print("La duracion promedio de las peliculas es de: "+ str(round(duracion_promedio, 2)))
@@ -156,6 +166,7 @@ def print_req_4(control, data):
             tabla_pelicula = [[k, v] for k, v in pelicula.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
     return None
 
 
@@ -225,7 +236,7 @@ def print_req_6(control, data):
         else:
             print("Peor película: No disponible")
         print("\n")
-        print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 
 
@@ -237,7 +248,10 @@ def print_req_7(control, data):
     companie = input('Ingrese el nombre de la compañia deseada: ')
     fecha_inicial = input('Ingrese el año donde quiere que inicie la busqueda: ')
     fecha_final = input('Ingrese la fecha donde quiere que finalice la busqueda: ')
+    start_time = time.time()
     resultado = logic.req_7(data, companie, fecha_inicial, fecha_final)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     
     if not resultado:
         print("No se encontraron películas producidas por la compañía en el rango de años especificado.")
@@ -265,7 +279,8 @@ def print_req_7(control, data):
         "Mejor Película", "Mejor Votación", 
         "Peor Película", "Peor Votación"], tablefmt="pretty"))
 
-
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
+    
 def print_req_8(catalog, data):
     """
         Función que imprime la solución del Requerimiento 8 en consola
@@ -274,10 +289,13 @@ def print_req_8(catalog, data):
     anio=int(input("Ingrese el año donde desea buscar la informacion: "))
     genero=input("Ingrese el genero que desea consultar: ")
     print("Espere que cargue la informacion")
+    start_time = time.time()
     diccionario=logic.req_8(catalog, anio, genero)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     tabla_pelicula = [[k, v] for k, v in diccionario.items()]
     print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
-
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
 
 # Se crea la lógica asociado a la vista
 control = new_logic()
