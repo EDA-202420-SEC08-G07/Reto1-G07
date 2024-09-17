@@ -145,7 +145,7 @@ def load_data(catalog, data_dir):
         # La estructura queda almacenada en la llave genres dentro de un array list y cada elemento tiene la siguiente forma:
         # {"id_pelicula":id_pelicula, "id_compania": id_compania, "nombre_compania": "nombre_compania"}
         # EJ: {'id_pelicula': 'tt0457513', 'id_compania': 291, 'nombre_compania': 'Perdido Prod.'}
-        
+    
     return catalog
 
 def get_first_last_movies(catalog):
@@ -184,17 +184,17 @@ def get_data(catalog, id):
         if catalog["id"]["elements"][i] == id:
             posicion_dato=i
     
-    pelicula={"Publicacion":ar.get_element(catalog["release_date"], posicion_dato),
-              "Titulo":ar.get_element(catalog["title"], posicion_dato),
-              "Idioma":ar.get_element(catalog["original_language"], posicion_dato),
-              "Duracion":ar.get_element(catalog["runtime"], posicion_dato),
-              "Presupuesto":ar.get_element(catalog["budget"], posicion_dato),
-              "Recaudo":ar.get_element(catalog["revenue"], posicion_dato),         
+    pelicula={"Publicacion":ar.get_element(catalog["release_date"], posicion_dato+1),
+              "Titulo":ar.get_element(catalog["title"], posicion_dato+1),
+              "Idioma":ar.get_element(catalog["original_language"], posicion_dato+1),
+              "Duracion":ar.get_element(catalog["runtime"], posicion_dato+1),
+              "Presupuesto":ar.get_element(catalog["budget"], posicion_dato+1),
+              "Recaudo":ar.get_element(catalog["revenue"], posicion_dato+1),         
     }
     if isinstance(pelicula.get("Presupuesto"), str):
         pelicula["Ganancias"] = "Unknown"
     else:
-        pelicula["Ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato)) - float(ar.get_element(catalog["budget"], posicion_dato))
+        pelicula["Ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato+1)) - float(ar.get_element(catalog["budget"], posicion_dato+1))
     return pelicula
 
 def req_1(catalog, min_runtime):
@@ -569,13 +569,73 @@ def req_7(catalog):
     pass
 
 
-def req_8(catalog):
-    """
-    Retorna el resultado del requerimiento 8
-    """
-    # TODO: Modificar el requerimiento 8
-    pass
+def req_8(catalog, anio_ingresado, genero_ingresado):
+    """Conocer la estadística de las películas publicadas en un año y de ungénerodados
 
+    Args:
+        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        anio (int): Anio del cual se quiere conocer la informacion
+        genero (str): Genero que se desea buscar
+
+    Returns:
+        dict con la estadistica de todos los items
+    """
+    conteo=0
+    suma_votos=0
+    votos_promedio=0
+    suma_tiempo=0
+    tiempo_promedio=0
+    ganancias_acumuladas=0
+    mejor=None
+    peor=None
+    tamanio=int(ar.size(catalog["id"]))
+    
+    for i in range(tamanio):
+        id_pelicula=catalog["id"]["elements"][i]
+        
+        # FORMATO YYYY-MM-DD
+        fecha=str(catalog['release_date']['elements'][i])
+        anio_peli=int(str(fecha[0])+str(fecha[1])+str(fecha[2])+str(fecha[3]))
+        
+        estado=catalog["status"]["elements"][i]
+        votacion=float(catalog["vote_average"]["elements"][i])
+        duracion=float(catalog["runtime"]["elements"][i])
+        if isinstance(catalog["revenue"]["elements"][i], str):
+            ganancias_acumuladas=ganancias_acumuladas
+        else:
+            ganancias_acumuladas+=float(catalog["revenue"]["elements"][i]) - float(catalog["budget"]["elements"][i])
+        
+        generos_pelicula = []
+        for genero in catalog["genres"]["elements"]:
+            if genero["id_pelicula"] == id_pelicula:
+                generos_pelicula.append(genero["nombre_genero"])
+        
+        # Filtro todos los criterios
+        if anio_ingresado==anio_peli and estado.lower()=="released" and genero_ingresado in generos_pelicula:
+            conteo+=1
+            suma_votos+=votacion
+            suma_tiempo+=duracion
+            if mejor is None or mejor<votacion:
+                mejor=votacion
+            if peor is None or peor>votacion:
+                peor=votacion
+                
+    if conteo==0:
+        votos_promedio=0
+        tiempo_promedio=0
+    else:
+        votos_promedio=round(suma_votos/conteo,2)   
+        tiempo_promedio=round(suma_tiempo/conteo,2)     
+    
+    dict_anio = {"total_pelis":conteo,
+                 "Puntuacion_promedio":votos_promedio,
+                 "Tiempo_promedio":tiempo_promedio,
+                 "Ganancias_acumuladas":ganancias_acumuladas,
+                 "Mejor_peli":mejor,
+                 "Peor_peli":peor
+                }
+    
+    return dict_anio
 
 # Funciones para medir tiempos de ejecucion
 

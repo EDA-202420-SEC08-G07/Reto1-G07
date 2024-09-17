@@ -158,8 +158,7 @@ def print_req_5(control, data):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
-    # TODO
-    catalog= logic.load_data(control, data_dir)
+    catalog=data
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     duracion_min= float(input("Ingrese el tiempo minimo de la pelicula que desea buscar: "))
@@ -195,8 +194,7 @@ def print_req_6(control, data):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 6
-    catalog = logic.load_data(control, data_dir)
+    catalog=data
     idioma_org = input("Ingrese el idioma original de las películas (ej.: 'en', 'fr', 'zh'): ")
     anio_inicial = int(input("Ingrese el año inicial del periodo a consultar (formato YYYY): "))
     anio_final = int(input("Ingrese el año final del periodo a consultar (formato YYYY): "))
@@ -228,12 +226,16 @@ def print_req_7(control):
     pass
 
 
-def print_req_8(control):
+def print_req_8(catalog, data):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 8
-    pass
+    catalog=data
+    anio=int(input("Ingrese el año donde desea buscar la informacion: "))
+    genero=input("Ingrese el genero que desea consultar: ")
+    diccionario=logic.req_8(catalog, anio, genero)
+    tabla_pelicula = [[k, v] for k, v in diccionario.items()]
+    print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
 
 
 # Se crea la lógica asociado a la vista
