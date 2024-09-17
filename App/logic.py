@@ -246,48 +246,73 @@ def req_2(catalog, idioma_usuario):
     contador = len(movies_true)
     return ultima_pelicula, contador
 
+def req_3(catalog, language, fecha_inicial, fecha_final):
+    """Consultar las películas en un idioma original entre un rango de fechas de publicación dado
 
-def req_3(catalog, language, date1, date2):
+    Args:
+        catalog (dict): diccionario con array list que contiene toda la informacion
+        language (str): Idioma del cual se desea consultar
+        fecha_inicial (str): La fecha inicial del periodo a consultar (con formato "%Y-%m-%d")
+        fecha_final (str): La fecha final del periodo a consultar (con formato "%Y-%m-%d").
+
+    Returns:
+        lista con las peliculas que cumplen con las condiciones
     """
-    Retorna el resultado del requerimiento 3
+    fecha_inicial_dt = datetime.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_final_dt = datetime.strptime(fecha_final, "%Y-%m-%d")
     
-    """
-    """
-    Retorna el resultado del requerimiento 3
-    """
-    """
-    Función que procesa el requerimiento 3
-    """
-    language = language.strip().lower()
-    lst = []
-    tiempo_movie = 0
-    contador = 0
-    fecha_1 = datetime.strptime(date1, "%Y-%m-%d")
-    fecha_2 = datetime.strptime(date2, "%Y-%m-%d")
-    tamanio = ar.size(catalog['release_date'])
+    tamanio = int(ar.size(catalog['release_date']))
+    peliculas = {"peli": [], "tamanio": 0}
+    duracion_promedio = 0
+    
     for i in range(tamanio):
         fecha_movie = catalog['release_date']['elements'][i]
         fecha_movie_dt = datetime.strptime(fecha_movie, "%Y-%m-%d")
+        idioma_movie= catalog["original_language"]["elements"][i]
 
-        if fecha_movie_dt >= fecha_1 and fecha_movie_dt <= fecha_2:
-            idioma = catalog['original_language']['elements'][i].strip().lower()
+        if fecha_inicial_dt < fecha_movie_dt < fecha_final_dt and idioma_movie.lower() == language.lower():
+            peliculas["tamanio"] += 1
+            duracion_promedio += float(catalog["runtime"]["elements"][i])
             
-            if idioma == language:
-                id = catalog['id']['elements'][i]
-                pelicula = get_data(catalog, id)
-                contador += 1
-                tiempo_movie += round(float(pelicula['Duracion']), 3)
-                lst.append(pelicula)
+            # Crear diccionario de película
+            m = {
+                "Publicacion": catalog["release_date"]["elements"][i],
+                "Titulo": catalog["title"]["elements"][i],
+                "Presupuesto": catalog["budget"]["elements"][i],
+                "Recaudo": catalog["revenue"]["elements"][i],
+                "Duracion": catalog["runtime"]["elements"][i],
+                "Puntaje": catalog["vote_average"]["elements"][i],
+                "Estado": catalog["status"]["elements"][i]
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+            
+            peliculas["peli"].append(m)
     
-    if contador > 0:
-        promedio = tiempo_movie / contador
-    else:
-        promedio = 0
-    
-    if len(lst) > 20:
-        lst = lst[:5] + lst[-5:]
+    # Llamamos al ordenado por Insertion Sort
+    peliculas["peli"] = ordenar_peliculas_por_fecha_insertion(peliculas["peli"])
 
-    return contador, lst, promedio
+    lista_primeras = []
+    lista_ultimas = []
+
+    if peliculas["tamanio"] > 20:
+        # Primeras 5 películas
+        lista_primeras = peliculas["peli"][:5]
+        
+        # Últimas 5 películas
+        lista_ultimas = peliculas["peli"][-5:]
+    else:
+        lista_primeras = peliculas["peli"]
+
+    tot_peliculas = int(peliculas.get("tamanio"))
+    if tot_peliculas == 0:
+        duracion_promedio = 0
+    else:
+        duracion_promedio = duracion_promedio / tot_peliculas
+
+    return tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas
     
 
 
