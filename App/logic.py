@@ -744,8 +744,10 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
                 suma_tiempo+=duracion
                 if mejor is None or mejor<votacion:
                     mejor=votacion
+                    nombre_mejor=catalog["title"]["elements"][i]
                 if peor is None or peor>votacion:
                     peor=votacion
+                    nombre_peor=catalog["title"]["elements"][i]
                 
     if conteo==0:
         votos_promedio=0
@@ -761,8 +763,8 @@ def req_8(catalog, anio_ingresado, genero_ingresado):
                  "Puntuacion_promedio":votos_promedio,
                  "Tiempo_promedio":tiempo_promedio,
                  "Ganancias_acumuladas":ganancias_acumuladas,
-                 "Mejor_peli":mejor,
-                 "Peor_peli":peor
+                 "Mejor_peli":"La mejor pelicula fue: "+str(nombre_mejor)+" con un promedio de: "+str(mejor),
+                 "Peor_peli":"La peor pelicula fue: "+str(nombre_peor)+" con un promedio de: "+str(peor)
                 }
     
     return dict_anio
