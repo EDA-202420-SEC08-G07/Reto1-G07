@@ -184,17 +184,22 @@ def get_data(catalog, id):
         if catalog["id"]["elements"][i] == id:
             posicion_dato=i
     
-    pelicula={"Publicacion":ar.get_element(catalog["release_date"], posicion_dato+1),
-              "Titulo":ar.get_element(catalog["title"], posicion_dato+1),
-              "Idioma":ar.get_element(catalog["original_language"], posicion_dato+1),
-              "Duracion":ar.get_element(catalog["runtime"], posicion_dato+1),
-              "Presupuesto":ar.get_element(catalog["budget"], posicion_dato+1),
-              "Recaudo":ar.get_element(catalog["revenue"], posicion_dato+1),         
+    pelicula={"Publicacion":ar.get_element(catalog["release_date"],  posicion_dato + 1),
+              "Titulo":ar.get_element(catalog["title"],  posicion_dato + 1),
+              "Idioma":ar.get_element(catalog["original_language"],  posicion_dato + 1),
+              "Duracion":ar.get_element(catalog["runtime"],  posicion_dato + 1),
+              "Presupuesto":ar.get_element(catalog["budget"],  posicion_dato + 1),
+              "Recaudo":ar.get_element(catalog["revenue"],  posicion_dato + 1),  
+              'id':ar.get_element(catalog['id'], posicion_dato + 1),
+              'Estado': ar.get_element(catalog['status'],  posicion_dato + 1),
+              'Promedio_Votos':ar.get_element(catalog['vote_average'], posicion_dato + 1),
+              'Votos_Totales':ar.get_element(catalog['vote_count'], posicion_dato + 1)
+              
     }
     if isinstance(pelicula.get("Presupuesto"), str):
         pelicula["Ganancias"] = "Unknown"
     else:
-        pelicula["Ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato+1)) - float(ar.get_element(catalog["budget"], posicion_dato+1))
+        pelicula["Ganancias"] = float(ar.get_element(catalog["revenue"], posicion_dato + 1)) - float(ar.get_element(catalog["budget"], posicion_dato + 1))
     return pelicula
 
 def req_1(catalog, min_runtime):
