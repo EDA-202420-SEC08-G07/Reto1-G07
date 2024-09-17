@@ -495,62 +495,69 @@ def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
 
 def req_6(catalog, idioma_org, anio_inicial, anio_final):
     """
-    Retorna el resultado del requerimiento 6
+    Retorna el resultado del requerimiento 6.
     """
     dict_anios = {}
-    for year in range(anio_inicial, anio_final+1):
+    
+    for year in range(anio_inicial, anio_final + 1):
         tamanio = int(ar.size(catalog["id"]))
         total_peliculas = 0
         votacion_total = 0
         duracion_total = 0
         ganancias_acumuladas = 0
-        pp = None
-        mp = None
+        mejor_pelicula = None
+        peor_pelicula = None
         
-        for i in range (0, tamanio):
+        for i in range(tamanio):
             fecha = catalog["release_date"]["elements"][i]
             anio = int(fecha[:4])
-            status = catalog["status"]["elements"][i]
-            idioma = catalog["original_language"]["elements"][i]
+            status = catalog["status"]["elements"][i].lower()  
+            idioma = catalog["original_language"]["elements"][i].lower()  
             
             if status == "released" and idioma == idioma_org and year == anio:
-                total_peliculas +=1
-                votacion_total += float(catalog["vote_average"]["elements"][i]) 
-                duracion_total += float(catalog["runtime"]["elements"][i])
+                total_peliculas += 1
+                votacion = float(catalog["vote_average"]["elements"][i])
+                duracion = float(catalog["runtime"]["elements"][i])
                 presupuesto = catalog["budget"]["elements"][i]
                 recaudacion = catalog["revenue"]["elements"][i]
+                
                 if isinstance(presupuesto, (int, float)) and isinstance(recaudacion, (int, float)):
                     ganancias_acumuladas += (recaudacion - presupuesto)
                 else:
                     ganancias_acumuladas += 0
-                if pp is None or float(catalog["vote_average"]["elements"][i]) < pp["votacion"]:
-                    pp = {
+                votacion_total += votacion
+                duracion_total += duracion
+                
+                if mejor_pelicula is None or votacion > mejor_pelicula["votacion"]:
+                    mejor_pelicula = {
                         "titulo": catalog["title"]["elements"][i],
-                        "votacion": float(catalog["vote_average"]["elements"][i])
+                        "votacion": votacion
                     }
-                if mp is None or float(catalog["vote_average"]["elements"][i]) > mp["votacion"]:
-                    mp = {
+                
+                if peor_pelicula is None or votacion < peor_pelicula["votacion"]:
+                    peor_pelicula = {
                         "titulo": catalog["title"]["elements"][i],
-                        "votacion": float(catalog["vote_average"]["elements"][i])
+                        "votacion": votacion
                     }
-            
+        
         if total_peliculas > 0:
             votacion_promedio_total = votacion_total / total_peliculas
             duracion_promedio_total = duracion_total / total_peliculas
         else:
             votacion_promedio_total = 0
             duracion_promedio_total = 0
-            
+        
         dict_anios[year] = {
             "total_peliculas": total_peliculas,
             "votacion_promedio_total": round(votacion_promedio_total, 2),
             "duracion_promedio_total": round(duracion_promedio_total, 2),
             "ganancias_acumuladas": round(ganancias_acumuladas, 2),
-            "mejor_pelicula": mp,
-            "peor_pelicula": pp
+            "mejor_pelicula": mejor_pelicula,
+            "peor_pelicula": peor_pelicula
         }
-        
+    
     return dict_anios
+
     
 
 
