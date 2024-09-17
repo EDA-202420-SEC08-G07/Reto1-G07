@@ -37,8 +37,12 @@ def load_data(control, data_dir):
     Carga los datos
     """
     nombre_archivo= input("Ingrese el nombre del archivo ('movies-small.csv'): ")
+    start_time = time.time()
     catalog=logic.load_data(control, data_dir, nombre_archivo)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
     print(print_first_and_last_movies(catalog))
+    print(f"Tiempo de ejecución: {elapsed_time:.6f} segundos")
     return catalog
 
 def print_first_and_last_movies(catalog):
