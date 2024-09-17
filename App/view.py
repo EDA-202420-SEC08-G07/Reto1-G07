@@ -94,21 +94,35 @@ def print_req_2(control, data):
 
 
 
-def print_req_3(control):
+def print_req_3(control, data):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 3
-    pass
-    catalog=logic.load_data(control, data_dir)
-    min_runtime = input("Ingrese el tiempo minimo desde el cual desea buscar: ")
-    ultima_pelicula, count = logic.req_1(catalog, min_runtime)
+    catalog=data
+    fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
+    fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
+    idioma=input("Ingrese el idioma del cual quiere saber la pelicula (en, it, fr): ")
+    tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas=logic.req_3(catalog, idioma, fecha_inicial, fecha_final)
     
-    print("El numero total de peliculas que cumplen con este criterio es de: "+str(count))
-    print("La ultima pelicula que cumple con este criterio es: ")
-    print(ultima_pelicula)
-
-
+    print("El total de peliculas en "+idioma+" es de: "+  str(tot_peliculas))
+    print("La duracion promedio de las peliculas en "+idioma+" es de: "+ str(round(duracion_promedio, 2)))
+    if tot_peliculas>20:
+        print("Las primeras 5 peliculas entre las fechas son: ")
+        for i in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in i.items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+            
+        print("Las ultimas 5 peliculas entre las fechas son: ")
+        for k in lista_ultimas:
+            tabla_pelicula = [[k, v] for k, v in k.items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+    else:
+        print("La lista de peliculas sacadas entre las fechas son: ")
+        for pelicula in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in pelicula.items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+    
+    return None
 def print_req_4(control, data):
     """
         Función que imprime la solución del Requerimiento 4 en consola
@@ -117,24 +131,25 @@ def print_req_4(control, data):
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     estado=input("Ingrese el estado de la pelicula que desea buscar: ")
-    tot_peliculas, duracion_promedio, lista=logic.req_4(catalog, fecha_inicial, fecha_final, estado)
+    tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas=logic.req_4(catalog, fecha_inicial, fecha_final, estado)
     
     print("El total de peliculas es de: "+  str(tot_peliculas))
     print("La duracion promedio de las peliculas es de: "+ str(round(duracion_promedio, 2)))
     if tot_peliculas>20:
         print("Las primeras 5 peliculas entre las fechas son: ")
-        for i in range(5):
-            tabla_pelicula = [[k, v] for k, v in lista[i].items()]
+        for i in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in i.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
             
         print("Las ultimas 5 peliculas entre las fechas son: ")
-        for k in range(len(lista)-5, len(lista)):
-            tabla_pelicula = [[k, v] for k, v in lista[k].items()]
+        for k in lista_ultimas:
+            tabla_pelicula = [[k, v] for k, v in k.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     else:
         print("La lista de peliculas sacadas entre las fechas son: ")
-        for pelicula in lista:
-            print(pelicula)
+        for pelicula in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in pelicula.items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     
     return None
 

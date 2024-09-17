@@ -246,20 +246,101 @@ def req_2(catalog, idioma_usuario):
     contador = len(movies_true)
     return ultima_pelicula, contador
 
+def req_3(catalog, language, fecha_inicial, fecha_final):
+    """Consultar las películas en un idioma original entre un rango de fechas de publicación dado
 
-def req_3(catalog):
+    Args:
+        catalog (dict): diccionario con array list que contiene toda la informacion
+        language (str): Idioma del cual se desea consultar
+        fecha_inicial (str): La fecha inicial del periodo a consultar (con formato "%Y-%m-%d")
+        fecha_final (str): La fecha final del periodo a consultar (con formato "%Y-%m-%d").
+
+    Returns:
+        lista con las peliculas que cumplen con las condiciones
     """
-    Retorna el resultado del requerimiento 3
-    """
-    # TODO: Modificar el requerimiento 3
-    pass
+    fecha_inicial_dt = datetime.strptime(fecha_inicial, "%Y-%m-%d")
+    fecha_final_dt = datetime.strptime(fecha_final, "%Y-%m-%d")
+    
+    tamanio = int(ar.size(catalog['release_date']))
+    peliculas = {"peli": [], "tamanio": 0}
+    duracion_promedio = 0
+    
+    for i in range(tamanio):
+        fecha_movie = catalog['release_date']['elements'][i]
+        fecha_movie_dt = datetime.strptime(fecha_movie, "%Y-%m-%d")
+        idioma_movie= catalog["original_language"]["elements"][i]
+
+        if fecha_inicial_dt < fecha_movie_dt < fecha_final_dt and idioma_movie.lower() == language.lower():
+            peliculas["tamanio"] += 1
+            duracion_promedio += float(catalog["runtime"]["elements"][i])
+            
+            # Crear diccionario de película
+            m = {
+                "Publicacion": catalog["release_date"]["elements"][i],
+                "Titulo": catalog["title"]["elements"][i],
+                "Presupuesto": catalog["budget"]["elements"][i],
+                "Recaudo": catalog["revenue"]["elements"][i],
+                "Duracion": catalog["runtime"]["elements"][i],
+                "Puntaje": catalog["vote_average"]["elements"][i],
+                "Estado": catalog["status"]["elements"][i]
+            }
+            if isinstance(m.get("Presupuesto"), str):
+                m["Ganancias"] = "Unknown"
+            else:
+                m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
+            
+            peliculas["peli"].append(m)
+    
+    # Llamamos al ordenado por Insertion Sort
+    peliculas["peli"] = ordenar_peliculas_por_fecha_insertion(peliculas["peli"])
+
+    lista_primeras = []
+    lista_ultimas = []
+
+    if peliculas["tamanio"] > 20:
+        # Primeras 5 películas
+        lista_primeras = peliculas["peli"][:5]
+        
+        # Últimas 5 películas
+        lista_ultimas = peliculas["peli"][-5:]
+    else:
+        lista_primeras = peliculas["peli"]
+
+    tot_peliculas = int(peliculas.get("tamanio"))
+    if tot_peliculas == 0:
+        duracion_promedio = 0
+    else:
+        duracion_promedio = duracion_promedio / tot_peliculas
+
+    return tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas
+    
+
+
+def ordenar_peliculas_por_fecha_insertion(peliculas):
+    """Ordena la lista de películas en base a la fecha de publicación (Insertion Sort)"""
+    n = len(peliculas)
+    for i in range(1, n):
+        # Película actual a insertar en la posición correcta
+        pelicula_actual = peliculas[i]
+        fecha_actual = datetime.strptime(pelicula_actual["Publicacion"], "%Y-%m-%d")
+        
+        # Desplazar las películas que están desordenadas
+        j = i - 1
+        while j >= 0 and datetime.strptime(peliculas[j]["Publicacion"], "%Y-%m-%d") > fecha_actual:
+            peliculas[j + 1] = peliculas[j]
+            j -= 1
+        
+        # Insertar la película actual en su posición correcta
+        peliculas[j + 1] = pelicula_actual
+    
+    return peliculas
 
 
 def req_4(catalog, fecha_inicial, fecha_final, estado):
-    """Listar  las películas  con  un  estado de  publicación entre un periodo de tiempo dado
+    """Listar las películas con un estado de publicación entre un periodo de tiempo dado
 
     Args:
-        catalog (dict): Diccionario con arraylist que contiene toda la informacion
+        catalog (dict): Diccionario con arraylist que contiene toda la información
         fecha_inicial (str): La fecha inicial del periodo a consultar (con formato "%Y-%m-%d")
         fecha_final (str): La fecha final del periodo a consultar (con formato "%Y-%m-%d").
         estado (str): Estado de producción de la película (ej.: “Released”,“Rumored”,etc)
@@ -272,31 +353,24 @@ def req_4(catalog, fecha_inicial, fecha_final, estado):
     peliculas = {"peli": [], "tamanio": 0}
     tamanio = int(ar.size(catalog["id"]))
     
-    for i in range(0, tamanio):
+    for i in range(tamanio):
         salida = catalog["release_date"]["elements"][i]
         salida_dt = datetime.strptime(salida, "%Y-%m-%d")
         estado_pelicula = catalog["status"]["elements"][i]
         
         if fecha_inicial_dt < salida_dt < fecha_final_dt and estado_pelicula.lower() == estado.lower():
-            peliculas["tamanio"]+=1
-            duracion_promedio+=float(catalog["runtime"]["elements"][i])
-            """
-            Fecha de publicación de la película
-            Título original de la película
-            Presupuesto destinado a la realización de la película
-            Dinero recaudado por la película
-            Ganancia de final de la película
-            Tiempo de duración en minutos de la película
-            Puntaje de calificación de la película
-            Idioma original de publicación
-            """
-            m={"Publicacion":catalog["release_date"]["elements"][i],
-              "Titulo":catalog["title"]["elements"][i],
-              "Presupuesto":catalog["budget"]["elements"][i],
-              "Recaudo":catalog["revenue"]["elements"][i],
-              "Duracion":catalog["runtime"]["elements"][i],
-              "Puntaje":catalog["revenue"]["elements"][i],
-              "Idioma":catalog["original_language"]["elements"][i]      
+            peliculas["tamanio"] += 1
+            duracion_promedio += float(catalog["runtime"]["elements"][i])
+            
+            # Crear diccionario de película
+            m = {
+                "Publicacion": catalog["release_date"]["elements"][i],
+                "Titulo": catalog["title"]["elements"][i],
+                "Presupuesto": catalog["budget"]["elements"][i],
+                "Recaudo": catalog["revenue"]["elements"][i],
+                "Duracion": catalog["runtime"]["elements"][i],
+                "Puntaje": catalog["vote_average"]["elements"][i],
+                "Idioma": catalog["original_language"]["elements"][i]
             }
             if isinstance(m.get("Presupuesto"), str):
                 m["Ganancias"] = "Unknown"
@@ -304,19 +378,29 @@ def req_4(catalog, fecha_inicial, fecha_final, estado):
                 m["Ganancias"] = float(ar.get_element(catalog["revenue"], i)) - float(ar.get_element(catalog["budget"], i))
             
             peliculas["peli"].append(m)
-            
+    
+    # Llamamos al ordenado por Insertion Sort
+    peliculas["peli"] = ordenar_peliculas_por_fecha_insertion(peliculas["peli"])
+
+    lista_primeras = []
+    lista_ultimas = []
+
     if peliculas["tamanio"] > 20:
-        lista = peliculas["peli"][:5] + peliculas["peli"][-5:]
-    else:
-        lista = peliculas["peli"]
+        # Primeras 5 películas
+        lista_primeras = peliculas["peli"][:5]
         
-    tot_peliculas=int(peliculas.get("tamanio"))
-    if tot_peliculas==0:
-        duracion_promedio=0
+        # Últimas 5 películas
+        lista_ultimas = peliculas["peli"][-5:]
     else:
-        duracion_promedio=duracion_promedio/tot_peliculas
-        
-    return tot_peliculas, duracion_promedio, lista
+        lista_primeras = peliculas["peli"]
+
+    tot_peliculas = int(peliculas.get("tamanio"))
+    if tot_peliculas == 0:
+        duracion_promedio = 0
+    else:
+        duracion_promedio = duracion_promedio / tot_peliculas
+
+    return tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas
 
 def req_5(catalog, fecha_inicial, fecha_final, duracion_min, duracion_max):
     """
