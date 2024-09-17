@@ -146,7 +146,6 @@ def load_data(catalog, data_dir):
         # {"id_pelicula":id_pelicula, "id_compania": id_compania, "nombre_compania": "nombre_compania"}
         # EJ: {'id_pelicula': 'tt0457513', 'id_compania': 291, 'nombre_compania': 'Perdido Prod.'}
         
-    print(catalog["production_companies"])
     return catalog
 
 def get_first_last_movies(catalog):
