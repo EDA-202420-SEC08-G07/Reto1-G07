@@ -67,11 +67,11 @@ def print_data(control, id):
     print(logic.get_data(control,id_a_buscar))
     return None
 
-def print_req_1(control):
+def print_req_1(control, data):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    catalog=logic.load_data(control, data_dir)
+    catalog=data
     min_runtime = float(input("Ingrese el tiempo minimo desde el cual desea buscar: "))
     ultima_pelicula, count = logic.req_1(catalog, min_runtime)
     tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
@@ -80,12 +80,11 @@ def print_req_1(control):
     print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
 
 
-def print_req_2(control):
+def print_req_2(control, data):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
-    catalog=logic.load_data(control, data_dir)
+    catalog=data
     idioma_usuario = input("Ingrese el idioma (en, n, fr, zh, etc.) desde el cual desea buscar: ")
     ultima_pelicula, count = logic.req_2(catalog, idioma_usuario)
     tabla_pelicula = [[k, v] for k, v in ultima_pelicula.items()]
@@ -110,11 +109,11 @@ def print_req_3(control):
     print(ultima_pelicula)
 
 
-def print_req_4(control):
+def print_req_4(control, data):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
-    catalog=logic.load_data(control, data_dir)
+    catalog=data
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     estado=input("Ingrese el estado de la pelicula que desea buscar: ")
@@ -125,10 +124,13 @@ def print_req_4(control):
     if tot_peliculas>20:
         print("Las primeras 5 peliculas entre las fechas son: ")
         for i in range(5):
-            print(lista[i])
+            tabla_pelicula = [[k, v] for k, v in lista[i].items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
+            
         print("Las ultimas 5 peliculas entre las fechas son: ")
         for k in range(len(lista)-5, len(lista)):
-            print(lista[k])
+            tabla_pelicula = [[k, v] for k, v in lista[k].items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     else:
         print("La lista de peliculas sacadas entre las fechas son: ")
         for pelicula in lista:
@@ -185,28 +187,28 @@ def main():
             print("Cargando información de los archivos ....\n")
             data = load_data(control, data_dir)
         elif int(inputs) == 2:
-            print_req_1(control)
+            print_req_1(control, data)
 
         elif int(inputs) == 3:
-            print_req_2(control)
+            print_req_2(control, data)
 
         elif int(inputs) == 4:
-            print_req_3(control)
+            print_req_3(control, data)
 
         elif int(inputs) == 5:
-            print_req_4(control)
+            print_req_4(control, data)
 
         elif int(inputs) == 6:
-            print_req_5(control)
+            print_req_5(control, data)
 
         elif int(inputs) == 7:
-            print_req_6(control)
+            print_req_6(control, data)
 
         elif int(inputs) == 8:
-            print_req_7(control)
+            print_req_7(control, data)
 
         elif int(inputs) == 9:
-            print_req_8(control)
+            print_req_8(control, data)
 
         elif int(inputs) == 0:
             working = False
