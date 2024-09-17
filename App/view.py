@@ -117,24 +117,25 @@ def print_req_4(control, data):
     fecha_inicial=input("Ingrese la fecha donde quiere que inicie la busqueda, formato YYYY-MM-DD: ")
     fecha_final=input("Ingrese la fecha donde quiere que acabe la busqueda, formato YYYY-MM-DD: ")
     estado=input("Ingrese el estado de la pelicula que desea buscar: ")
-    tot_peliculas, duracion_promedio, lista=logic.req_4(catalog, fecha_inicial, fecha_final, estado)
+    tot_peliculas, duracion_promedio, lista_primeras, lista_ultimas=logic.req_4(catalog, fecha_inicial, fecha_final, estado)
     
     print("El total de peliculas es de: "+  str(tot_peliculas))
     print("La duracion promedio de las peliculas es de: "+ str(round(duracion_promedio, 2)))
     if tot_peliculas>20:
         print("Las primeras 5 peliculas entre las fechas son: ")
-        for i in range(5):
-            tabla_pelicula = [[k, v] for k, v in lista[i].items()]
+        for i in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in i.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
             
         print("Las ultimas 5 peliculas entre las fechas son: ")
-        for k in range(len(lista)-5, len(lista)):
-            tabla_pelicula = [[k, v] for k, v in lista[k].items()]
+        for k in lista_ultimas:
+            tabla_pelicula = [[k, v] for k, v in k.items()]
             print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     else:
         print("La lista de peliculas sacadas entre las fechas son: ")
-        for pelicula in lista:
-            print(pelicula)
+        for pelicula in lista_primeras:
+            tabla_pelicula = [[k, v] for k, v in pelicula.items()]
+            print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     
     return None
 
