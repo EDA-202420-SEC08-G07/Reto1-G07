@@ -27,8 +27,8 @@ def new_logic():
                "vote_average":None,
                "vote_count":None,
                "budget":None,
-               "genres": {"nombre_genero": None, "id_genero": None},  # id y name
-               "production_companies": {"nombre_compania": None, "id_compania": None}  # id y name
+               "genres": None,
+               "production_companies": None
     }
     
     catalog['id'] = ar.new_list()
@@ -41,18 +41,8 @@ def new_logic():
     catalog['vote_average'] = ar.new_list()
     catalog['vote_count'] = ar.new_list()
     catalog['budget'] = ar.new_list()
-    
-    # Inicializar 'genres' correctamente con sublistas para 'nombre_genero' e 'id_genero'
-    catalog['genres'] = {
-        "nombre_genero": ar.new_list(),
-        "id_genero": ar.new_list()
-    }
-
-    # Inicializar 'production_companies' correctamente con sublistas para 'nombre_compania' e 'id_compania'
-    catalog['production_companies'] = {
-        "nombre_compania": ar.new_list(),
-        "id_compania": ar.new_list()
-    }
+    catalog['genres'] = ar.new_list()
+    catalog['production_companies'] = ar.new_list()
     return catalog
 
 
@@ -116,6 +106,47 @@ def load_data(catalog, data_dir):
             budget = "Undefined"
         ar.add_last(catalog["budget"], budget)
 
+        genero = movie.get("genres", "Unknown")
+        if len(genero) == 0:
+            genero = "Unknown"
+        gen = {
+            "id_pelicula": None,
+            "id_genero": None,
+            "nombre_genero": None
+        }
+        genres_list = json.loads(movie.get("genres"))
+        for genre in genres_list:
+            gen["id_pelicula"] = movie.get("id", "Unknown")
+            gen["id_genero"] = genre.get("id", "Unknown")
+            gen["nombre_genero"] = genre.get("name", "Unknown")
+            
+            ar.add_last(catalog["genres"], gen)
+        
+        # La estructura queda almacenada en la llave genres dentro de un array list y cada elemento tiene la siguiente forma:
+        # {"id_pelicula":id_pelicula, "id_genero": id_genero, "nombre_genero": "name_genero"}
+        # EJ: {'id_pelicula': 'tt0457513', 'id_genero': 9648, 'nombre_genero': 'Mystery'}
+        
+        compania = movie.get("production_companies", "Unknown")
+        if len(compania) == 0:
+            compania = "Unknown"
+        comp = {
+            "id_pelicula": None,
+            "id_compania": None,
+            "nombre_compania": None
+        }
+        companies_list = json.loads(movie.get("production_companies"))
+        for company in companies_list:
+            comp["id_pelicula"] = movie.get("id", "Unknown") 
+            comp["id_compania"] = company.get("id", "Unknown")
+            comp["nombre_compania"] = company.get("name", "Unknown")
+            
+            ar.add_last(catalog["production_companies"], comp)
+        
+        # La estructura queda almacenada en la llave genres dentro de un array list y cada elemento tiene la siguiente forma:
+        # {"id_pelicula":id_pelicula, "id_compania": id_compania, "nombre_compania": "nombre_compania"}
+        # EJ: {'id_pelicula': 'tt0457513', 'id_compania': 291, 'nombre_compania': 'Perdido Prod.'}
+        
+    print(catalog["production_companies"])
     return catalog
 
 def get_first_last_movies(catalog):
