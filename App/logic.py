@@ -127,9 +127,7 @@ def get_first_last_movies(catalog):
         Una lista con las primeras 5 y una lista con las ultimas 5
     """
     first_elems= []
-    first_elems.append(ar.first_element(catalog["id"]))
     last_elems= []
-    last_elems.append(ar.last_element(catalog["id"]))
     tamanio= int(ar.size(catalog["id"]))
     
     # Primeras 5
@@ -142,7 +140,7 @@ def get_first_last_movies(catalog):
         ultimos_id=ar.get_element(catalog["id"], k+1)
         last_elems.append(get_data(catalog, ultimos_id))
           
-    return first_elems, last_elems
+    return first_elems, last_elems, tamanio
 
 # Funciones de consulta sobre el catálogo
 

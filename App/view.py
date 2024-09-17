@@ -44,14 +44,17 @@ def print_first_and_last_movies(catalog):
     """
     Imprime las primeras 5 peliculas y las ultimas 5 peliculas cargadas
     """
-    first, last=logic.get_first_last_movies(catalog)
+    first, last, total=logic.get_first_last_movies(catalog)
+    print("Se cargo un total de "+str(total)+" peliculas")
     print("\nLas primeras peliculas de la lista son: \n")
     for movie in first:
-        print(movie)
+        tabla_pelicula = [[k, v] for k, v in movie.items()]
+        print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     
-    print("\Las ultimas peliculas de la lista son: \n")
+    print("\nLas ultimas peliculas de la lista son: \n")
     for movie in last:
-        print(movie)
+        tabla_pelicula = [[k, v] for k, v in movie.items()]
+        print(tabulate(tabla_pelicula, headers=["Campo", "Valor"], tablefmt="pretty"))
     return None
 
 
